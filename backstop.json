@@ -1,0 +1,47 @@
+{
+  "id": "prod_test",
+  "viewports": [
+    {
+      "name": "phone",
+      "width": 320,
+      "height": 480
+    },
+    {
+      "name": "tablet_v",
+      "width": 568,
+      "height": 1024
+    },
+    {
+      "name": "tablet_h",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "name": "full_hd",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "scenarios": [
+    {
+      "label": "OECD Charts",
+      "url": "http://localhost:3000",
+      "selectors": [
+        "document"
+      ],
+      "hideSelectors": [],
+      "removeSelectors": [],
+      "selectorExpansion": true,
+      "readyEvent": null,
+      "delay": 500,
+      "misMatchThreshold" : 0.01,
+      "requireSameDimensions" : true
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "screenshots/",
+    "bitmaps_test": "backstop_data/bitmaps_test",
+    "html_report": "backstop_data/html_report"
+  },
+  "fileNameTemplate": "{scenarioLabel}_{viewportLabel}"
+}

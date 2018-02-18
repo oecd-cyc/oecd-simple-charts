@@ -1,0 +1,102 @@
+//GENERAL STYLING
+
+body
+  padding: 0
+  margin: 0
+
+button
+  cursor: pointer
+  background-color: #777
+  border-width: 0
+  border-radius: 4px
+  padding: 10px
+  color: #fff
+
+  &:hover
+    background-color: #999
+
+rect, line
+  shape-rendering: crispedges
+
+.oecd-chart__container
+  width: 100%
+
+  svg
+    overflow: visible
+    width: 100%
+
+.oecd-chart__title-container
+  display: flex
+  align-items: center
+
+  &--hidden
+    display: none
+
+.oecd-chart__title
+  font-size: 20px
+  margin: 20px 0
+  margin-right: 20px
+
+.oecd-chart__info
+  align-self: center
+
+  svg.oecd-chart__info-icon
+    width: 25px
+    height: 25px
+    fill: #ff0000
+    vertical-align: middle
+    cursor: pointer
+    transform: translateZ(0)
+
+  &:hover
+    fill: #707070
+
+//PEARL CHART
+.OECDCharts__PearlChart
+  font-family: Arial
+
+  .clickable
+    cursor: pointer
+
+  .pearlchart__x-axis
+    line
+      shape-rendering: crispEdges
+      stroke: #777
+
+    .pearlchart__axis-ticks
+      .domain
+        display: none
+
+      .tick line
+        stroke: #bbb
+
+      .tick text
+        fill: #bbb
+
+
+
+// STACKED BAR chart
+.OECDCharts__StackedChart
+  font-family: Arial
+
+
+// BOX PLOT
+.OECDCharts__BoxPlot
+  font-family: Arial
+
+  .boxplot__legend
+    margin-bottom: 20px
+    font-size: 12px
+
+  .boxplot__axis
+    path, line
+      fill: none
+      stroke: #fff
+      shape-rendering: crispEdges
+    .tick line
+      stroke: #707070
+
+  .marker-group__label--left
+  .marker-group__label--right
+      font-size: 12px
+      line-height: 20px
