@@ -11,6 +11,9 @@ yarn.lock
 
 .vscode
 
+# visual regression tool (backstop)
+backstop_data/
+
 # code coverage test
 coverage
 .nyc_output
