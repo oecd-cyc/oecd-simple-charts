@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# misc
+.DS_Store
+
+npm-debug.log
+yarn-error.log
+yarn.lock
+.yarnclean
+
+.vscode
+
+# visual regression tool (backstop)
+backstop_data/
+
+# code coverage test
+coverage
+.nyc_output
