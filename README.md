@@ -2,8 +2,13 @@
 
 A lightweight chartingtool.
 
+![OECD Generic screenshot](https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/screenshots/OECD_Charts_full_hd.png)
 
 ## Installation
+
+```sh
+$ git clone https://github.com/oecd-cyc/generic-charting-tool.git && cd oecd-cyc/generic-charting-tool
+```
 
 ```sh
 $ npm install
@@ -58,7 +63,7 @@ npm run docs-server
 
 Open `localhost:3333` in your browser.
 
-In order to generate the docs, run:
+In order to generate the docs(node 6.x is required), run:
 
 ```sh
 $ npm run docs
