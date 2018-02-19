@@ -130,7 +130,6 @@ class BoxPlot extends OECDChart {
    */
   update(_data) {
     this.options.data = _data;
-    console.log(this.options.data);
     const data = BoxPlot.parseData(_data);
     BoxPlot.validateData(data);
     this.getChart(data);

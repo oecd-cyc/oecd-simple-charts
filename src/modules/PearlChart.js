@@ -44,6 +44,7 @@ import OECDChart from './OECDChart';
  * @param {Function} options.callback - A function that is called on circle click
  * @param {Function} [options.labelFormat = val => Math.round(val * 10) / 10] - A function for formatting circle labels
  * @param {Function} [options.showLabels = false] - Hide or show circle labels
+ * @param {Function} [options.colorLabels = false] - Fill labels in circle color or black
  * @param {array}  options.data - The data as array. i.e.:
  * ```
  * [
@@ -74,6 +75,7 @@ class PearlChart extends OECDChart {
       ticks: 4,
       tickValues: null,
       showLabels: false,
+      colorLabels: false,
       callback: null,
       showTicks: true,
       labelFormat: val => Math.round(val * 10) / 10
@@ -239,7 +241,6 @@ class PearlChart extends OECDChart {
       .attr('r', radius)
       .style('fill', d => d.color);
 
-
     if (this.options.showLabels) {
       circle.append('text')
         .classed('pearlchart__circle-label', true)
@@ -248,7 +249,8 @@ class PearlChart extends OECDChart {
         .attr('y', (innerHeight / 2))
         .attr('dy', -(radius * 2) + labelOffset)
         .text(d => this.options.labelFormat(d.value))
-        .attr('text-anchor', 'middle');
+        .attr('text-anchor', 'middle')
+        .style('fill', d => (!this.options.colorLabels ? '#000' : d.color));
     } else {
       circle.append('text')
         .classed('pearlchart__circle-tooltip', true)
@@ -258,6 +260,7 @@ class PearlChart extends OECDChart {
         .attr('dy', -(radius * 2) + labelOffset)
         .text(d => this.options.labelFormat(d.value))
         .attr('text-anchor', 'middle')
+        .style('fill', d => (!this.options.colorLabels ? '#000' : d.color))
         .style('display', 'none');
     }
   }

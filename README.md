@@ -50,7 +50,7 @@ This will save new screenshots in the `screenshots/` folder and these will be us
 
 ## Documentation
 
-The complete documentation can be found in `docs/`. Start docs server:
+Make sure to use node version 8.4. The complete documentation can be found in `docs/`. Start docs server:
 
 ```sh
 npm run docs-server
@@ -63,4 +63,3 @@ In order to generate the docs, run:
 ```sh
 $ npm run docs
 ```
-
