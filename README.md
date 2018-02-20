@@ -7,7 +7,7 @@ A lightweight chartingtool.
 ## Installation
 
 ```sh
-$ git clone https://github.com/oecd-cyc/generic-charting-tool.git && cd oecd-cyc/generic-charting-tool
+$ git clone https://github.com/oecd-cyc/generic-charting-tool.git && cd generic-charting-tool
 ```
 
 ```sh
