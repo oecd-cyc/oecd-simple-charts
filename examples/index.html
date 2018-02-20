@@ -13,19 +13,22 @@
   <body>
     <div id="chart-container" style="max-width:800px; margin: 0 auto;">
       <div id="PearlChartExample"></div>
-      <button id="pearlchart__button">Update PearlChart</button>
-      <button id="pearlchart___title_button">Hide Title</button>
+      <button id="pearlchart__button">Update Pearl Chart</button>
       <div id="StackedChartExample"></div>
-      <button id="stackedchart__button">Update StackedBar</button>
-      <button id="stackedchart___title_button">Hide Title</button>
+      <button id="stackedchart__button">Update Stacked Bar Chart</button>
       <div id="BoxPlotExample"></div>
-      <button id="boxplot__button">Update BoxPlot</button>
-      <button id="boxplot___title_button">Hide Title</button>
-      <div id="BoxPlotMultiExample"></div>
-      <button id="boxplotmulti__button">Update BoxPlotMulti</button>
+      <button id="boxplot__button">Update Box Plot</button>
     </div>
 
     <script>
+    var RED = '#900c3f';
+    var ORANGE = '#C7754E';
+    var YELLOW = '#fddd5d';
+    var GREEN = '#aad356';
+    var DARKGREEN = '#61B77F';
+    var BLUE = '#189aa8';
+    var DARKBLUE = '#48798C';
+    var PURPLE = '#78586f';
 
     var callbackFunc = function(data) {
       console.log(data);
@@ -34,22 +37,20 @@
     var PearlChartExample = new OECDCharts.PearlChart({
       container: '#PearlChartExample',
       extent: [300, 600],
-      title: 'Test for Pearl Chart',
+      title: 'Pearl Chart',
       renderInfoButton: true,
-      fontSize: 14,
-      radius: 10,
-      ticks: 4,
       showTicks: true,
       showLabels: false,
       colorLabels: true,
       callback: callbackFunc,
       data: [
         {
-          value: 500.09,
-          color: '#f00'
+          value: 410,
+          color: RED
         },
         {
-          value: 520.002289
+          value: 520,
+          color: BLUE
         }
       ],
       labelFormat: function(val) {
@@ -61,19 +62,14 @@
       PearlChartExample.update([
         {
           value: 490,
-          color: '#f00'
+          color: RED
         },
         {
-          value: 580
+          value: 580,
+          color: BLUE
         }
       ]);
     }
-
-
-    document.getElementById('pearlchart___title_button').onclick = function() {
-      PearlChartExample.toggleTitle();
-    }
-
 
     PearlChartExample.on('infoclick', function() {
       console.log('show popup');
@@ -81,19 +77,19 @@
 
     var StackedChartExample = new OECDCharts.StackedChart({
       container: '#StackedChartExample',
-      title: 'Distribution of performance level I - IV',
+      title: 'Stacked Bar Chart',
       renderInfoButton: true,
       data: [
         {
           values: [1,2,3,4,5],
           barLabels: ['0%', '100%'],
-          colors: ['#D1CFCF', '#4C4C4C'],
+          colors: [YELLOW, RED],
           stackLabels: ['I', 'II', 'III', 'IV', 'V']
         },
         {
           values: [2,4,6,8,20],
           barLabels: ['0%', '100%'],
-          colors: ['#fff', '#f00']
+          colors: [YELLOW, BLUE]
         }
       ]
     });
@@ -105,13 +101,13 @@
         {
           values: [1,10,3,4,5],
           barLabels: ['0%', '100%'],
-          colors: ['#D1CFCF', '#000'],
+          colors: [YELLOW, RED],
           stackLabels: ['1', '2', '3', '4', '5']
         },
         {
-          values: [2,4,6,8,20],
+          values: [2,4,10,15,20],
           barLabels: ['0%', '100%'],
-          colors: ['#fff', '#f00']
+          colors: [YELLOW, BLUE]
         }
       ]);
     }
@@ -120,35 +116,30 @@
       console.log('show showPopup');
     });
 
-    document.getElementById('stackedchart___title_button').onclick = function() {
-      StackedChartExample.toggleTitle();
-    }
 
     var BoxPlotExample = new OECDCharts.BoxPlot({
       container: '#BoxPlotExample',
-      title: 'Performance top and low performer',
+      title: 'Box Plot',
       extent: [350, 650],
       step: 50,
-      markerHeight: 100,
-      markerWidth: 20,
-      legend: '<div class="legend">Legend</div>',
       renderInfoButton: true,
       data: [
         {
           values: [480, 500, 530],
-          colors: ['#f0f0f0', '#555', '#000'],
+          colors: [YELLOW, ORANGE, RED],
           labelLeft: {
             text: 'male low',
             icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
           },
           labelRight: {
-            text: 'male top'
+            text: 'male top',
+            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
 
           }
         },
         {
           values: [400, 520, 550],
-          colors: ['#EBCFCC', '#D14432', '#D14533']
+          colors: [GREEN, DARKGREEN, BLUE]
         }
       ]
     });
@@ -160,113 +151,23 @@
       BoxPlotExample.update([
         {
           values: [400, 550, 580],
-          colors: ['#ff0', '#f00', '#000'],
+          colors: [YELLOW, ORANGE, RED],
           labelLeft: {
-            text: 'male low 2',
+            text: 'male low',
             icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
           },
           labelRight: {
-            text: 'male top 2',
+            text: 'male top',
             icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
           }
         },
         {
           values: [400, 520, 570],
-          colors: ['#EBCFCC', '#D14432', '#D14533']
+          colors: [GREEN, DARKGREEN, BLUE]
         },
         {
           values: [400, 450, 500],
-          colors: ['#EBCFCC', '#D14432', '#D14533']
-        }
-      ]);
-    }
-
-    document.getElementById('boxplot___title_button').onclick = function() {
-      BoxPlotExample.toggleTitle();
-    }
-
-    var BoxPlotMultiExample = new OECDCharts.BoxPlot({
-      container: '#BoxPlotMultiExample',
-      title: 'Performance Boys and Girls',
-      extent: [350, 650],
-      step: 50,
-      legend: '<div class="legend">Legend</div>',
-      data: [
-        {
-          values: [480, 500, 530],
-          colors: ['#f0f0f0', '#555', '#000'],
-          labelLeft: {
-            text: 'male low 1',
-            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
-          },
-          labelRight: {
-            text: 'male top 1'
-          }
-        },
-        {
-          values: [380, 450, 500],
-          colors: ['#f0f0f0', '#555', '#000'],
-          labelLeft: {
-            text: 'female low'
-          },
-          labelRight: {
-            text: 'female top',
-            icon: 'http://downloadicons.net/sites/default/files/venus-icon-7519.png'
-          }
-        },
-        {
-          values: [400, 520, 570],
-          colors: ['#EBCFCC', '#D14432', '#D14533']
-        },
-        {
-          values: [410, 520, 560],
-          colors: ['#EBCFCC', '#D14432', '#D14533'],
-          labelLeft: {
-            text: 'male low 2'
-          },
-          labelRight: {
-            text: 'male top 2',
-            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
-          }
-        }
-      ]
-    });
-
-
-    document.getElementById('boxplotmulti__button').onclick = function() {
-      BoxPlotMultiExample.update([
-        {
-          values: [500, 560, 600],
-          colors: ['#f0f0f0', '#555', '#000'],
-          labelLeft: {
-            text: 'male low update'
-          },
-          labelRight: {
-            text: 'male top update',
-            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
-          }
-        },
-        {
-          values: [380, 450, 500],
-          colors: ['#f0f0f0', '#555', '#000'],
-          labelLeft: {
-            text: 'male low 2'
-          },
-          labelRight: {
-            text: 'male top 2 ',
-            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
-          }
-        },
-        {
-          values: [400, 520, 570],
-          color: ['#EBCFCC', '#D14432', '#D14533'],
-          labelLeft: {
-            text: 'male low 3'
-          },
-          labelRight: {
-            text: 'male top 3',
-            icon: 'https://maxcdn.icons8.com/Share/icon/Users//male_filled1600.png'
-          }
+          colors: [BLUE, DARKBLUE, PURPLE]
         }
       ]);
     }
