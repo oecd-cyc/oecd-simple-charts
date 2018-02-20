@@ -2,7 +2,7 @@
 
 A lightweight chartingtool.
 
-![OECD Generic screenshot](https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/screenshots/OECD_Charts_full_hd.png)
+![OECD Generic screenshot](https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png)
 
 ## Installation
 

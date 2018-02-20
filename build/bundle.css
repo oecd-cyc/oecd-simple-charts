@@ -33,7 +33,7 @@ line {
 .oecd-chart__info svg.oecd-chart__info-icon {
   width: 25px;
   height: 25px;
-  fill: #f00;
+  fill: #777;
   vertical-align: middle;
   cursor: pointer;
   -webkit-transform: translateZ(0);
