@@ -14,8 +14,7 @@
     "test:watch": "NODE_ENV=test ava --watch",
     "changelog": "git-changelog",
     "postchangelog": "git add CHANGELOG.md docs/ screenshots/",
-    "preversion": "npm run changelog",
-    "docs-server": "httpster --dir ./docs"
+    "preversion": "npm run changelog"
   },
   "repository": {
     "url": "git@github.com:wbkd/oecd_charting-tool.git",
@@ -44,7 +43,6 @@
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
     "git-changelog": "^1.1.2",
-    "httpster": "^1.0.3",
     "jsdoc": "^3.5.4",
     "nyc": "^11.1.0",
     "rimraf": "^2.6.1",
