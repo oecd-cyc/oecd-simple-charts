@@ -3,6 +3,7 @@
 A lightweight chartingtool. Find the docs [here](https://oecd-cyc.github.io/generic-charting-tool).
 
 <img src="https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png" style="max-width: 960px">
+
 ## Installation
 
 ```sh
@@ -52,17 +53,9 @@ $ npm run test:visual:reference
 
 This will save new screenshots in the `screenshots/` folder and these will be used as reference to be tested against the next time you run the tests.
 
-## Documentation
+## Update documentation
 
-Make sure to use node version 8.4. The complete documentation can be found in `docs/`. Start docs server:
-
-```sh
-npm run docs-server
-```
-
-Open `localhost:3333` in your browser.
-
-In order to generate the docs(node 6.x is required), run:
+In order to generate the docs, run:
 
 ```sh
 $ npm run docs
