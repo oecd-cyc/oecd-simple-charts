@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line51">line 51</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -186,7 +186,7 @@
 
             
 
-            <td class="description last"><p>The options object for the stacked chart</p>
+            <td class="description last"><p>The options object for the Box Plot</p>
                 <h6>Properties</h6>
                 
 
@@ -423,7 +423,7 @@
                 </td>
             
 
-            <td class="description last"><p>The info-Icon for the tooltip, renders after the title</p></td>
+            <td class="description last"><p>The info-icon for the tooltip, renders after the title</p></td>
         </tr>
 
     
@@ -692,7 +692,7 @@
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">object</span>
 
 
             
@@ -702,7 +702,79 @@
 
             
 
-            <td class="description last"><p>(optional) Label for the left marker</p></td>
+            <td class="description last"><p>(optional) Label for the left marker</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>(optional) Text for the left marker</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>icon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>(optional) Path to icon for the left marker</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -715,7 +787,7 @@
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">object</span>
 
 
             
@@ -725,7 +797,79 @@
 
             
 
-            <td class="description last"><p>(optional) Label for the right marker</p></td>
+            <td class="description last"><p>(optional) Label for the right marker</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>label</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>(optional) Text for the right marker</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>icon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>(optional) Path to icon for the right marker</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -796,7 +940,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line95">line 95</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line103">line 103</a>
     </li></ul></dd>
     
 
@@ -848,13 +992,17 @@
     <pre class="prettyprint"><code>BoxPlotExample.update([
   {
     values: [400, 550, 580],
-    colors: ['#ff0', '#f00', '#000'],
-    labelLeftText: 'NEW LABEL',
-    labelRightText: 'NEW TEXT'
+    colors: ['#fddd5d', '#C7754E', '#900c3f'],
+    labelLeft: {
+      text: 'new label left',
+    },
+    labelRight: {
+      text: 'new label right',
+    }
   },
   {
-    values: [360, 400, 570],
-    colors: ['#EBCFCC', '#D14432', '#D14533']
+    values: [400, 520, 570],
+    colors: ['#aad356', '#61B77F', '#189aa8']
   }
 ]);</code></pre>
 

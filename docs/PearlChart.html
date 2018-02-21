@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line61">line 61</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -124,20 +124,26 @@
 
 var PearlChartExample = new OECDCharts.PearlChart({
   container: '#PearlChartExample',
-  extent: [300, 1000],
-  title: 'Average Performance',
-  fontSize: 14,
-  radius: 10,
+  extent: [300, 600],
+  title: 'Pearl Chart',
+  renderInfoButton: true,
+  showTicks: true,
+  showLabels: false,
+  colorLabels: true,
   callback: callbackFunc,
   data: [
     {
-      value: 520,
-      color: '#f00'
+      value: 410,
+      color: '#900c3f'
     },
     {
-      value: 800
+      value: 520,
+      color: '#189aa8'
     }
-  ]
+  ],
+  labelFormat: function(val) {
+    return Math.round(val) + '$';
+  }
 });</code></pre>
 
 
@@ -696,13 +702,14 @@ var PearlChartExample = new OECDCharts.PearlChart({
 
             <td class="description last"><p>The data as array. i.e.:</p>
 <pre class="prettyprint source"><code>[
- {
-   value: 520,
-   color: '#f00'
- },
- {
-   value: 800
- }
+  {
+    value: 410,
+    color: '#900c3f'
+  },
+  {
+    value: 520,
+    color: '#189aa8'
+  }
 ]</code></pre></td>
         </tr>
 
@@ -767,7 +774,7 @@ var PearlChartExample = new OECDCharts.PearlChart({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line142">line 142</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -819,10 +826,11 @@ var PearlChartExample = new OECDCharts.PearlChart({
     <pre class="prettyprint"><code>PearlChartExample.update([
   {
     value: 490,
-    color: '#f00'
+    color: '#900c3f'
   },
   {
-    value: 820
+    value: 820,
+    color: '#189aa8'
   }
 ]);</code></pre>
 

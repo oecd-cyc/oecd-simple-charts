@@ -86,13 +86,17 @@ class BoxPlot extends OECDChart {
    * BoxPlotExample.update([
    *   {
    *     values: [400, 550, 580],
-   *     colors: ['#ff0', '#f00', '#000'],
-   *     labelLeftText: 'NEW LABEL',
-   *     labelRightText: 'NEW TEXT'
+   *     colors: ['#fddd5d', '#C7754E', '#900c3f'],
+   *     labelLeft: {
+   *       text: 'new label left',
+   *     },
+   *     labelRight: {
+   *       text: 'new label right',
+   *     }
    *   },
    *   {
-   *     values: [360, 400, 570],
-   *     colors: ['#EBCFCC', '#D14432', '#D14533']
+   *     values: [400, 520, 570],
+   *     colors: ['#aad356', '#61B77F', '#189aa8']
    *   }
    * ]);
    */
