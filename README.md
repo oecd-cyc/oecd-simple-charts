@@ -4,22 +4,31 @@ A lightweight chartingtool. Visit the [docs](https://oecd-cyc.github.io/oecd-sim
 
 <img src="https://raw.githubusercontent.com/oecd-cyc/oecd-simple-charts/master/public/images/charts-example.png" style="max-width: 960px">
 
-## Installation
+## Usage
 
-```sh
-$ git clone https://github.com/oecd-cyc/oecd-simple-charts.git && cd oecd-simple-charts
+To get started, you can either install the library using npm
+
+```
+npm install oecd-simple-charts
 ```
 
-```sh
-$ npm install
+or embed the `bundle.min.js` and `bundle.min.css` files, either downloading them from the [repository](https://github.com/oecd-cyc/oecd-simple-charts) or directly embedding them from a CDN service like [unpkg](https://unpkg.com/oecd-simple-charts/build/bundle.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/oecd-simple-charts).
+
+```html
+<script src="https://unpkg.com/oecd-simple-charts/build/bundle.min.js"></script>
+<link href="https://unpkg.com/oecd-simple-charts/build/bundle.min.css" rel="stylesheet">
 ```
+
+In order to create a chart you need to add a container DOM node. Then you can start with the configuration of the chart. You can set a title, change the size and color of the elements and add data points. Each chart has an `update` function, that takes an array of new data and updates the visualization.
 
 ## Development
 
-Builds the application and starts a webserver with hot loading.
-Runs on [localhost:3000](http://localhost:3000/):
+Clone the repository, install the dependencies, builds the application and starts a webserver with hot loading on [localhost:3000](http://localhost:3000/):
 
 ```sh
+$ git clone https://github.com/oecd-cyc/oecd-simple-charts.git
+$ cd oecd-simple-charts
+$ npm install
 $ npm start
 ```
 
