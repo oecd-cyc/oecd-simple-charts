@@ -48,7 +48,6 @@ import OECDChart from './OECDChart';
  * A pearl chart component.
  *
  * @example
- *
  * var callbackFunc = function(data) {
  *   console.log(data);
  * }
@@ -77,7 +76,7 @@ import OECDChart from './OECDChart';
  *   }
  * });
  * @constructor
- * @param {Object} options - The options object for the pearl chart.
+ * @param {object} options - The options object for the pearl chart.
  * @param {string} options.container - The DOM element to use as container
  * @param {string} options.title - The title to display
  * @param {bool}  [options.renderInfoButton = false] - The info-Icon for the tooltip, renders after the title
@@ -86,10 +85,10 @@ import OECDChart from './OECDChart';
  * @param {int} [options.ticks = 4] - The number of ticks displayed under the pearl chart, will only be used if tickValues is not set
  * @param {array} options.tickValues - An array of numbers that are displayed as ticks
  * @param {bool} [options.showTicks = true] - Hide or show ticks
- * @param {Function} options.callback - A function that is called on circle click
- * @param {Function} [options.labelFormat = val => Math.round(val * 10) / 10] - A function for formatting circle labels
- * @param {Function} [options.showLabels = false] - Hide or show circle labels
- * @param {Function} [options.colorLabels = false] - Fill labels in circle color or black
+ * @param {function} options.callback - A function that is called on circle click
+ * @param {function} [options.labelFormat = val => Math.round(val * 10) / 10] - A function for formatting circle labels
+ * @param {function} [options.showLabels = false] - Hide or show circle labels
+ * @param {function} [options.colorLabels = false] - Fill labels in circle color or black
  * @param {array}  options.data - The data as array. i.e.:
  * ```
  * [

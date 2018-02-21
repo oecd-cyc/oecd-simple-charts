@@ -1,13 +1,13 @@
-# OECD Generic charting tool
+# OECD Simple Charts
 
-A lightweight chartingtool. Find the docs [here](https://oecd-cyc.github.io/generic-charting-tool).
+A lightweight chartingtool. Visit the [docs](https://oecd-cyc.github.io/oecd-simple-charts) or checkout the [code](https://github.com/oecd-cyc/oecd-simple-charts).
 
-<img src="https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png" style="max-width: 960px">
+<img src="https://raw.githubusercontent.com/oecd-cyc/oecd-simple-charts/master/public/images/charts-example.png" style="max-width: 960px">
 
 ## Installation
 
 ```sh
-$ git clone https://github.com/oecd-cyc/generic-charting-tool.git && cd generic-charting-tool
+$ git clone https://github.com/oecd-cyc/oecd-simple-charts.git && cd oecd-simple-charts
 ```
 
 ```sh

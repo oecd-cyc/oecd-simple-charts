@@ -46,18 +46,16 @@
 
 
     <section class="readme">
-        <article><h1>OECD Generic charting tool</h1><p>A lightweight chartingtool. Find the docs <a href="https://oecd-cyc.github.io/generic-charting-tool">here</a>.</p>
-<p><img src="https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png" style="max-width: 960px"></p>
-<h2>Installation</h2><pre class="prettyprint source lang-sh"><code>$ git clone https://github.com/oecd-cyc/generic-charting-tool.git && cd generic-charting-tool</code></pre><pre class="prettyprint source lang-sh"><code>$ npm install</code></pre><h2>Development</h2><p>Builds the application and starts a webserver with hot loading.
+        <article><h1>OECD Simple Charts</h1><p>A lightweight chartingtool. Visit the <a href="https://oecd-cyc.github.io/oecd-simple-charts">docs</a> or checkout the <a href="https://github.com/oecd-cyc/oecd-simple-charts">code</a>.</p>
+<p><img src="https://raw.githubusercontent.com/oecd-cyc/oecd-simple-charts/master/public/images/charts-example.png" style="max-width: 960px"></p>
+<h2>Installation</h2><pre class="prettyprint source lang-sh"><code>$ git clone https://github.com/oecd-cyc/oecd-simple-charts.git && cd oecd-simple-charts</code></pre><pre class="prettyprint source lang-sh"><code>$ npm install</code></pre><h2>Development</h2><p>Builds the application and starts a webserver with hot loading.
 Runs on <a href="http://localhost:3000/">localhost:3000</a>:</p>
 <pre class="prettyprint source lang-sh"><code>$ npm start</code></pre><h2>Build</h2><p>Builds a minified version of the library in the <code>build/</code> folder.</p>
 <pre class="prettyprint source lang-sh"><code>$ npm run build</code></pre><h2>Testing</h2><p>Run the functional test-suite located in <code>test/</code>:</p>
 <pre class="prettyprint source lang-sh"><code>$ npm test</code></pre><p>To run the visual-regression tests, you will first need a running webserver on port 3000 (see <a href="#development">Development</a>). Then you can start the tests running:</p>
 <pre class="prettyprint source lang-sh"><code>$ npm run test:visual</code></pre><p>If the test fails, but you want to keep your changes run:</p>
 <pre class="prettyprint source lang-sh"><code>$ npm run test:visual:reference</code></pre><p>This will save new screenshots in the <code>screenshots/</code> folder and these will be used as reference to be tested against the next time you run the tests.</p>
-<h2>Documentation</h2><p>Make sure to use node version 8.4. The complete documentation can be found in <code>docs/</code>. Start docs server:</p>
-<pre class="prettyprint source lang-sh"><code>npm run docs-server</code></pre><p>Open <code>localhost:3333</code> in your browser.</p>
-<p>In order to generate the docs(node 6.x is required), run:</p>
+<h2>Update documentation</h2><p>In order to generate the docs, run:</p>
 <pre class="prettyprint source lang-sh"><code>$ npm run docs</code></pre></article>
     </section>
 

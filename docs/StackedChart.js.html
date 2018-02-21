@@ -49,21 +49,21 @@ import OECDChart from './OECDChart';
  * @example
  * var StackedChartExample = new OECDCharts.StackedChart({
  *   container: '#StackedChartExample',
- *   title: 'Distribution of performance level I - IV',
+ *   title: 'Stacked Bar Chart',
  *   renderInfoButton: true,
  *   data: [
  *     {
  *       values: [1,2,3,4,5],
  *       barLabels: ['0%', '100%'],
- *       colors: ['#D1CFCF', '#4C4C4C'],
+ *       colors: ['#fddd5d', '#900c3f'],
  *       stackLabels: ['I', 'II', 'III', 'IV', 'V']
  *     },
  *     {
  *       values: [2,4,6,8,20],
  *       barLabels: ['0%', '100%'],
- *       colors: ['#fff', '#f00']
+ *       colors: ['#fddd5d', '#189aa8']
  *     }
- *  ]
+ *   ]
  * });
  * @constructor
  * @param {object}  options - The options object for the stacked chart
@@ -142,14 +142,14 @@ class StackedChart extends OECDChart {
    * StackedChartExample.update([
    *   {
    *     values: [1,10,3,4,5],
-   *     barLabels: ['NEU', 'NEU2'],
-   *     colors: ['#D1CFCF', '#000'],
-   *     stackLabels: ['IIIIIIIII', 'II', 'III', 'IV', 'V']
+   *     barLabels: ['0%', '100%'],
+   *     colors: ['#fddd5d', '#900c3f'],
+   *     stackLabels: ['1', '2', '3', '4', '5']
    *   },
    *   {
-   *     values: [2,4,6,8,20],
+   *     values: [2,4,10,15,20],
    *     barLabels: ['0%', '100%'],
-   *     colors: ['#fff', '#f00']
+   *     colors: ['#fddd5d', '#189aa8']
    *   }
    * ]);
    */
