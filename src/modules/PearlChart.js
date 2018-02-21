@@ -16,20 +16,26 @@ import OECDChart from './OECDChart';
  *
  * var PearlChartExample = new OECDCharts.PearlChart({
  *   container: '#PearlChartExample',
- *   extent: [300, 1000],
- *   title: 'Average Performance',
- *   fontSize: 14,
- *   radius: 10,
+ *   extent: [300, 600],
+ *   title: 'Pearl Chart',
+ *   renderInfoButton: true,
+ *   showTicks: true,
+ *   showLabels: false,
+ *   colorLabels: true,
  *   callback: callbackFunc,
  *   data: [
  *     {
- *       value: 520,
- *       color: '#f00'
+ *       value: 410,
+ *       color: '#900c3f'
  *     },
  *     {
- *       value: 800
+ *       value: 520,
+ *       color: '#189aa8'
  *     }
- *   ]
+ *   ],
+ *   labelFormat: function(val) {
+ *     return Math.round(val) + '$';
+ *   }
  * });
  * @constructor
  * @param {Object} options - The options object for the pearl chart.
@@ -48,13 +54,14 @@ import OECDChart from './OECDChart';
  * @param {array}  options.data - The data as array. i.e.:
  * ```
  * [
- *  {
- *    value: 520,
- *    color: '#f00'
- *  },
- *  {
- *    value: 800
- *  }
+ *   {
+ *     value: 410,
+ *     color: '#900c3f'
+ *   },
+ *   {
+ *     value: 520,
+ *     color: '#189aa8'
+ *   }
  * ]
  * ```
  */
@@ -132,10 +139,11 @@ class PearlChart extends OECDChart {
    * PearlChartExample.update([
    *   {
    *     value: 490,
-   *     color: '#f00'
+   *     color: '#900c3f'
    *   },
    *   {
-   *     value: 820
+   *     value: 820,
+   *     color: '#189aa8'
    *   }
    * ]);
    */
