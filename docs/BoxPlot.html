@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line48">line 48</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -119,25 +119,28 @@
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>var BoxPlotExample = new OECDCharts.BoxPlot({
-  container: '#BoxPlotExample',
-  title: 'Performance top and low performer',
-  extent: [350, 650],
-  step: 50,
-  legend: '&lt;div class="legend">Legend&lt;/div>',
-  renderInfoButton: true,
-  data: [
-    {
-      values: [480, 500, 530],
-      color: ['#f0f0f0', '#555', '#000'],
-      labelLeft: 'label left',
-      labelRight: 'Some text'
-    },
-    {
-      values: [400, 520, 570],
-      color: ['#EBCFCC', '#D14432', '#D14533']
-    }
- ]
-});</code></pre>
+     container: '#BoxPlotExample',
+     title: 'Box Plot',
+     extent: [350, 650],
+     step: 50,
+     renderInfoButton: true,
+     data: [
+       {
+         values: [480, 500, 530],
+         colors: ['#fddd5d', '#C7754E', '#900c3f'],
+         labelLeft: {
+           text: 'male low'
+         },
+         labelRight: {
+           text: 'male top'
+         }
+       },
+       {
+         values: [400, 520, 550],
+         colors: ['#aad356', '#61B77F', '#189aa8']
+       }
+     ]
+   });</code></pre>
 
 
 
@@ -793,7 +796,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line92">line 92</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line95">line 95</a>
     </li></ul></dd>
     
 
