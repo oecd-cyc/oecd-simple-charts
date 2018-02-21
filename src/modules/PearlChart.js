@@ -9,7 +9,6 @@ import OECDChart from './OECDChart';
  * A pearl chart component.
  *
  * @example
- *
  * var callbackFunc = function(data) {
  *   console.log(data);
  * }
