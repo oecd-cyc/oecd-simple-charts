@@ -7,34 +7,37 @@ import OECDChart from './OECDChart';
 /**
  * A BoxPlot component
  * @example
- * var BoxPlotExample = new OECDCharts.BoxPlot({
- *   container: '#BoxPlotExample',
- *   title: 'Performance top and low performer',
- *   extent: [350, 650],
- *   step: 50,
- *   legend: '<div class="legend">Legend</div>',
- *   renderInfoButton: true,
- *   data: [
- *     {
- *       values: [480, 500, 530],
- *       color: ['#f0f0f0', '#555', '#000'],
- *       labelLeft: 'label left',
- *       labelRight: 'Some text'
- *     },
- *     {
- *       values: [400, 520, 570],
- *       color: ['#EBCFCC', '#D14432', '#D14533']
- *     }
- *  ]
- * });
+ *    var BoxPlotExample = new OECDCharts.BoxPlot({
+ *      container: '#BoxPlotExample',
+ *      title: 'Box Plot',
+ *      extent: [350, 650],
+ *      step: 50,
+ *      renderInfoButton: true,
+ *      data: [
+ *        {
+ *          values: [480, 500, 530],
+ *          colors: ['#fddd5d', '#C7754E', '#900c3f'],
+ *          labelLeft: {
+ *            text: 'male low'
+ *          },
+ *          labelRight: {
+ *            text: 'male top'
+ *          }
+ *        },
+ *        {
+ *          values: [400, 520, 550],
+ *          colors: ['#aad356', '#61B77F', '#189aa8']
+ *        }
+ *      ]
+ *    });
  * @constructor
- * @param {object}  options - The options object for the stacked chart
+ * @param {object}  options - The options object for the Box Plot
  * @param {string}  options.container - The DOM element to use as container
  * @param {string}  options.title - The title to display
  * @param {array}   options.extent - The min and max value for generating the x-axis
  * @param {number}  options.step - Indicates the stepsize for the x-axis ticks
  * @param {string}  options.legend - HTML code for the legend
- * @param {bool}  [options.renderInfoButton = false] - The info-Icon for the tooltip, renders after the title
+ * @param {bool}  [options.renderInfoButton = false] - The info-icon for the tooltip, renders after the title
  * @param {int}  [options.fontSize = 12] - The font-size for the labels in px
  * @param {int}  [options.markerHeight = 30] - The height of the marker in px
  * @param {int}  [options.markerHeight = 10] - The width of the marker in px
@@ -42,8 +45,12 @@ import OECDChart from './OECDChart';
  * @param {array}   options.data - The data as array
  * @param {array}   options.data.values - The values to display
  * @param {array}   options.data.colors - The colors for the elements
- * @param {array}   options.data.labelLeft - (optional) Label for the left marker
- * @param {array}   options.data.labelRight - (optional) Label for the right marker
+ * @param {object}   options.data.labelLeft - (optional) Label for the left marker
+ * @param {string}   options.data.labelLeft.label - (optional) Text for the left marker
+ * @param {string}   options.data.labelLeft.icon - (optional) Path to icon for the left marker
+ * @param {object}   options.data.labelRight - (optional) Label for the right marker
+ * @param {string}   options.data.labelRight.label - (optional) Text for the right marker
+ * @param {string}   options.data.labelRight.icon - (optional) Path to icon for the right marker
  */
 class BoxPlot extends OECDChart {
   constructor(options = {}) {

@@ -46,26 +46,29 @@ import OECDChart from './OECDChart';
 /**
  * A BoxPlot component
  * @example
- * var BoxPlotExample = new OECDCharts.BoxPlot({
- *   container: '#BoxPlotExample',
- *   title: 'Performance top and low performer',
- *   extent: [350, 650],
- *   step: 50,
- *   legend: '&lt;div class="legend">Legend&lt;/div>',
- *   renderInfoButton: true,
- *   data: [
- *     {
- *       values: [480, 500, 530],
- *       color: ['#f0f0f0', '#555', '#000'],
- *       labelLeft: 'label left',
- *       labelRight: 'Some text'
- *     },
- *     {
- *       values: [400, 520, 570],
- *       color: ['#EBCFCC', '#D14432', '#D14533']
- *     }
- *  ]
- * });
+ *    var BoxPlotExample = new OECDCharts.BoxPlot({
+ *      container: '#BoxPlotExample',
+ *      title: 'Box Plot',
+ *      extent: [350, 650],
+ *      step: 50,
+ *      renderInfoButton: true,
+ *      data: [
+ *        {
+ *          values: [480, 500, 530],
+ *          colors: ['#fddd5d', '#C7754E', '#900c3f'],
+ *          labelLeft: {
+ *            text: 'male low'
+ *          },
+ *          labelRight: {
+ *            text: 'male top'
+ *          }
+ *        },
+ *        {
+ *          values: [400, 520, 550],
+ *          colors: ['#aad356', '#61B77F', '#189aa8']
+ *        }
+ *      ]
+ *    });
  * @constructor
  * @param {object}  options - The options object for the stacked chart
  * @param {string}  options.container - The DOM element to use as container
