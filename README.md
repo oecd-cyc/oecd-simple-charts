@@ -1,9 +1,8 @@
 # OECD Generic charting tool
 
-A lightweight chartingtool.
+A lightweight chartingtool. Find the docs [here](https://oecd-cyc.github.io/generic-charting-tool).
 
-![OECD Generic screenshot](https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png)
-
+<img src="https://raw.githubusercontent.com/oecd-cyc/generic-charting-tool/master/public/images/charts-example.png" style="max-width: 960px">
 ## Installation
 
 ```sh
