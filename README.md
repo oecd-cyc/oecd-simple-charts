@@ -12,11 +12,11 @@ To get started, you can either install the library using npm
 npm install oecd-simple-charts
 ```
 
-or embed the `bundle.min.js` and `bundle.min.css` files, either downloading them from the [repository](https://github.com/oecd-cyc/oecd-simple-charts) or directly embedding them from a CDN service like [unpkg](https://unpkg.com/oecd-simple-charts/build/bundle.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/oecd-simple-charts).
+or embed the `bundle.min.js` and `bundle.min.css` files, either downloading them from the [repository](https://github.com/oecd-cyc/oecd-simple-charts) or directly embedding them from a CDN service like [unpkg](https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/oecd-simple-charts).
 
 ```html
-<script src="https://unpkg.com/oecd-simple-charts/build/bundle.min.js"></script>
-<link href="https://unpkg.com/oecd-simple-charts/build/bundle.min.css" rel="stylesheet">
+<script src="https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js"></script>
+<link href="https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.css" rel="stylesheet">
 ```
 
 In order to create a chart you need to add a container DOM node. Then you can start with the configuration of the chart. You can set a title, change the size and color of the elements and add data points. Each chart has an `update` function, that takes an array of new data and updates the visualization.
