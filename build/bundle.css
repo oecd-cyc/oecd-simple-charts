@@ -10,12 +10,10 @@ line {
   width: 100%;
 }
 .oecd-chart__title-container {
-  display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+      align-items: center;
 }
 .oecd-chart__title-container--hidden {
   display: none;
@@ -36,8 +34,7 @@ line {
   fill: #777;
   vertical-align: middle;
   cursor: pointer;
-  -webkit-transform: translateZ(0);
-          transform: translateZ(0);
+  transform: translateZ(0);
 }
 .oecd-chart__info:hover {
   fill: #707070;

@@ -1,7 +1,13 @@
 {
-  "name": "oecd_charting-tool",
+  "name": "oecd-simple-charts",
   "version": "1.0.0",
-  "description": "Lightweight charting-tool",
+  "description": "D3 charting library for creating pearl charts, stacked bar charts and box plots",
+  "keywords": [
+    "D3",
+    "charts",
+    "data visualization"
+  ],
+  "homepage": "https://oecd-cyc.github.io/oecd-simple-charts/",
   "scripts": {
     "docs": "jsdoc -c jsdoc.json",
     "clean": "rimraf build/",
@@ -17,11 +23,15 @@
     "preversion": "npm run changelog"
   },
   "repository": {
-    "url": "git@github.com:wbkd/oecd_charting-tool.git",
+    "url": "git@github.com:oecd-cyc/oecd-simple-charts.git",
     "type": "git"
   },
-  "author": "webkid.io",
-  "license": "MIT",
+  "author": {
+    "name": "webkid",
+    "email": "info@webkid.io",
+    "url": "https://webkid.io"
+  },
+  "license": "See license file LICENSE",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "ava": "^0.22.0",
@@ -68,16 +78,13 @@
     "babel": "inherit"
   },
   "dependencies": {
-    "d3": "^4.10.0",
     "d3-array": "^1.2.0",
     "d3-axis": "^1.0.8",
     "d3-dispatch": "^1.0.3",
     "d3-format": "^1.2.1",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",
-    "d3-transform": "^1.0.5",
     "d3-transition": "^1.1.0",
-    "lodash-es": "^4.17.4",
-    "performance-now": "^2.1.0"
+    "lodash-es": "^4.17.5"
   }
 }
