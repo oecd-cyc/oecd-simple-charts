@@ -12,7 +12,7 @@ To get started, you can either install the library using npm
 npm install oecd-simple-charts
 ```
 
-or embed the `bundle.min.js` and `bundle.min.css` files, either downloading them from the [repository](https://github.com/oecd-cyc/oecd-simple-charts) or directly embedding them from a CDN service like [unpkg](https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js) or [jsDelivr](https://cdn.jsdelivr.net/npm/oecd-simple-charts).
+or embed the `bundle.min.js` and `bundle.min.css` files, either downloading them from the [repository](https://github.com/oecd-cyc/oecd-simple-charts) or directly embedding them from a CDN service like [unpkg](https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js) or [jsDelivr](https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js).
 
 ```html
 <script src="https://unpkg.com/oecd-simple-charts/build/oecd-simple-charts.min.js"></script>
