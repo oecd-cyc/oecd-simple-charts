@@ -2,7 +2,7 @@
 
 A lightweight chartingtool. Visit the [docs](https://oecd-cyc.github.io/oecd-simple-charts) or checkout the [code](https://github.com/oecd-cyc/oecd-simple-charts).
 
-<img src="https://raw.githubusercontent.com/oecd-cyc/oecd-simple-charts/master/public/images/charts-example.png" style="max-width: 960px">
+<img src="https://raw.githubusercontent.com/oecd-cyc/oecd-simple-charts/master/public/images/charts-example.png" style="width:100%; max-width: 960px">
 
 ## Usage
 
