@@ -1,6 +1,6 @@
 {
   "name": "oecd-simple-charts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "D3 charting library for creating pearl charts, stacked bar charts and box plots",
   "keywords": [
     "D3",
