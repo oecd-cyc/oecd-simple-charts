@@ -8,12 +8,8 @@ import OECDChart from './OECDChart';
 /**
  * A pearl chart component.
  *
- * @example
- * var callbackFunc = function(data) {
- *   console.log(data);
- * }
- *
- * var PearlChartExample = new OECDCharts.PearlChart({
+ * @example <caption>browser usage:</caption>
+ * const PearlChartExample = new OECDCharts.PearlChart({
  *   container: '#PearlChartExample',
  *   extent: [300, 600],
  *   title: 'Pearl Chart',
@@ -21,7 +17,7 @@ import OECDChart from './OECDChart';
  *   showTicks: true,
  *   showLabels: false,
  *   colorLabels: true,
- *   callback: callbackFunc,
+ *   callback: data => console.log(data),
  *   data: [
  *     {
  *       value: 410,
@@ -32,10 +28,13 @@ import OECDChart from './OECDChart';
  *       color: '#189aa8'
  *     }
  *   ],
- *   labelFormat: function(val) {
- *     return Math.round(val) + '$';
- *   }
+ *   labelFormat: val => `${Math.round(val)} $`
  * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { PearlChart } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const pearlChart = new PearlChart({ chartOptions });
  * @constructor
  * @param {object} options - The options object for the pearl chart.
  * @param {string} options.container - The DOM element to use as container

@@ -6,30 +6,36 @@ import OECDChart from './OECDChart';
 
 /**
  * A BoxPlot component
- * @example
- *    var BoxPlotExample = new OECDCharts.BoxPlot({
- *      container: '#BoxPlotExample',
- *      title: 'Box Plot',
- *      extent: [350, 650],
- *      step: 50,
- *      renderInfoButton: true,
- *      data: [
- *        {
- *          values: [480, 500, 530],
- *          colors: ['#fddd5d', '#C7754E', '#900c3f'],
- *          labelLeft: {
- *            text: 'male low'
- *          },
- *          labelRight: {
- *            text: 'male top'
- *          }
- *        },
- *        {
- *          values: [400, 520, 550],
- *          colors: ['#aad356', '#61B77F', '#189aa8']
- *        }
- *      ]
- *    });
+ * @example <caption>Browser usage:</caption>
+ * const BoxPlotExample = new OECDCharts.BoxPlot({
+ *   container: '#BoxPlotExample',
+ *   title: 'Box Plot',
+ *   extent: [350, 650],
+ *   step: 50,
+ *   renderInfoButton: true,
+ *   data: [
+ *    {
+ *      values: [480, 500, 530],
+ *      colors: ['#fddd5d', '#C7754E', '#900c3f'],
+ *      labelLeft: {
+ *        text: 'male low'
+ *      },
+ *      labelRight: {
+ *        text: 'male top'
+ *      }
+ *    },
+ *    {
+ *      values: [400, 520, 550],
+ *      colors: ['#aad356', '#61B77F', '#189aa8']
+ *    }
+ *   ]
+ * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { BoxPlot } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const boxPlot = new BoxPlot({ chartOptions });
+ *
  * @constructor
  * @param {object}  options - The options object for the Box Plot
  * @param {string}  options.container - The DOM element to use as container

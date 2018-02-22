@@ -7,8 +7,8 @@ import OECDChart from './OECDChart';
 /**
  * A stacked chart component
  *
- * @example
- * var StackedChartExample = new OECDCharts.StackedChart({
+ * @example <caption>browser usage:</caption>
+ * const StackedChartExample = new OECDCharts.StackedChart({
  *   container: '#StackedChartExample',
  *   title: 'Stacked Bar Chart',
  *   renderInfoButton: true,
@@ -26,6 +26,11 @@ import OECDChart from './OECDChart';
  *     }
  *   ]
  * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { StackedChart } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const stackedChart = new StackedChart({ chartOptions });
  * @constructor
  * @param {object}  options - The options object for the stacked chart
  * @param {string}  options.container - The DOM element to use as container

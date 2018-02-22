@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line67">line 67</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -116,13 +116,11 @@
 
 
 
-    <h5>Example</h5>
+    <h5>Examples</h5>
     
-    <pre class="prettyprint"><code>var callbackFunc = function(data) {
-  console.log(data);
-}
-
-var PearlChartExample = new OECDCharts.PearlChart({
+        <p class="code-caption">browser usage:</p>
+    
+    <pre class="prettyprint"><code>const PearlChartExample = new OECDCharts.PearlChart({
   container: '#PearlChartExample',
   extent: [300, 600],
   title: 'Pearl Chart',
@@ -130,7 +128,7 @@ var PearlChartExample = new OECDCharts.PearlChart({
   showTicks: true,
   showLabels: false,
   colorLabels: true,
-  callback: callbackFunc,
+  callback: data => console.log(data),
   data: [
     {
       value: 410,
@@ -141,10 +139,15 @@ var PearlChartExample = new OECDCharts.PearlChart({
       color: '#189aa8'
     }
   ],
-  labelFormat: function(val) {
-    return Math.round(val) + '$';
-  }
+  labelFormat: val => `${Math.round(val)} $`
 });</code></pre>
+
+        <p class="code-caption">ES6 modules usage:</p>
+    
+    <pre class="prettyprint"><code>import { PearlChart } from 'oecd-simple-charts';
+import 'oecd-simple-charts/build/oecd-simple-charts.css'
+
+const pearlChart = new PearlChart({ chartOptions });</code></pre>
 
 
 
@@ -774,7 +777,7 @@ var PearlChartExample = new OECDCharts.PearlChart({
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line149">line 149</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line148">line 148</a>
     </li></ul></dd>
     
 

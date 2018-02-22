@@ -598,12 +598,8 @@ var OECDChart = function () {
 /**
  * A pearl chart component.
  *
- * @example
- * var callbackFunc = function(data) {
- *   console.log(data);
- * }
- *
- * var PearlChartExample = new OECDCharts.PearlChart({
+ * @example <caption>browser usage:</caption>
+ * const PearlChartExample = new OECDCharts.PearlChart({
  *   container: '#PearlChartExample',
  *   extent: [300, 600],
  *   title: 'Pearl Chart',
@@ -611,7 +607,7 @@ var OECDChart = function () {
  *   showTicks: true,
  *   showLabels: false,
  *   colorLabels: true,
- *   callback: callbackFunc,
+ *   callback: data => console.log(data),
  *   data: [
  *     {
  *       value: 410,
@@ -622,10 +618,13 @@ var OECDChart = function () {
  *       color: '#189aa8'
  *     }
  *   ],
- *   labelFormat: function(val) {
- *     return Math.round(val) + '$';
- *   }
+ *   labelFormat: val => `${Math.round(val)} $`
  * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { PearlChart } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const pearlChart = new PearlChart({ chartOptions });
  * @constructor
  * @param {object} options - The options object for the pearl chart.
  * @param {string} options.container - The DOM element to use as container
@@ -870,8 +869,8 @@ var PearlChart = function (_OECDChart) {
 /**
  * A stacked chart component
  *
- * @example
- * var StackedChartExample = new OECDCharts.StackedChart({
+ * @example <caption>browser usage:</caption>
+ * const StackedChartExample = new OECDCharts.StackedChart({
  *   container: '#StackedChartExample',
  *   title: 'Stacked Bar Chart',
  *   renderInfoButton: true,
@@ -889,6 +888,11 @@ var PearlChart = function (_OECDChart) {
  *     }
  *   ]
  * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { StackedChart } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const stackedChart = new StackedChart({ chartOptions });
  * @constructor
  * @param {object}  options - The options object for the stacked chart
  * @param {string}  options.container - The DOM element to use as container
@@ -1103,30 +1107,36 @@ var StackedChart = function (_OECDChart) {
 
 /**
  * A BoxPlot component
- * @example
- *    var BoxPlotExample = new OECDCharts.BoxPlot({
- *      container: '#BoxPlotExample',
- *      title: 'Box Plot',
- *      extent: [350, 650],
- *      step: 50,
- *      renderInfoButton: true,
- *      data: [
- *        {
- *          values: [480, 500, 530],
- *          colors: ['#fddd5d', '#C7754E', '#900c3f'],
- *          labelLeft: {
- *            text: 'male low'
- *          },
- *          labelRight: {
- *            text: 'male top'
- *          }
- *        },
- *        {
- *          values: [400, 520, 550],
- *          colors: ['#aad356', '#61B77F', '#189aa8']
- *        }
- *      ]
- *    });
+ * @example <caption>Browser usage:</caption>
+ * const BoxPlotExample = new OECDCharts.BoxPlot({
+ *   container: '#BoxPlotExample',
+ *   title: 'Box Plot',
+ *   extent: [350, 650],
+ *   step: 50,
+ *   renderInfoButton: true,
+ *   data: [
+ *    {
+ *      values: [480, 500, 530],
+ *      colors: ['#fddd5d', '#C7754E', '#900c3f'],
+ *      labelLeft: {
+ *        text: 'male low'
+ *      },
+ *      labelRight: {
+ *        text: 'male top'
+ *      }
+ *    },
+ *    {
+ *      values: [400, 520, 550],
+ *      colors: ['#aad356', '#61B77F', '#189aa8']
+ *    }
+ *   ]
+ * });
+ * @example <caption>ES6 modules usage:</caption>
+ * import { BoxPlot } from 'oecd-simple-charts';
+ * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+ *
+ * const boxPlot = new BoxPlot({ chartOptions });
+ *
  * @constructor
  * @param {object}  options - The options object for the Box Plot
  * @param {string}  options.container - The DOM element to use as container

@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line55">line 55</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -116,31 +116,40 @@
 
 
 
-    <h5>Example</h5>
+    <h5>Examples</h5>
     
-    <pre class="prettyprint"><code>var BoxPlotExample = new OECDCharts.BoxPlot({
-     container: '#BoxPlotExample',
-     title: 'Box Plot',
-     extent: [350, 650],
-     step: 50,
-     renderInfoButton: true,
-     data: [
-       {
-         values: [480, 500, 530],
-         colors: ['#fddd5d', '#C7754E', '#900c3f'],
-         labelLeft: {
-           text: 'male low'
-         },
-         labelRight: {
-           text: 'male top'
-         }
-       },
-       {
-         values: [400, 520, 550],
-         colors: ['#aad356', '#61B77F', '#189aa8']
-       }
-     ]
-   });</code></pre>
+        <p class="code-caption">Browser usage:</p>
+    
+    <pre class="prettyprint"><code>const BoxPlotExample = new OECDCharts.BoxPlot({
+  container: '#BoxPlotExample',
+  title: 'Box Plot',
+  extent: [350, 650],
+  step: 50,
+  renderInfoButton: true,
+  data: [
+   {
+     values: [480, 500, 530],
+     colors: ['#fddd5d', '#C7754E', '#900c3f'],
+     labelLeft: {
+       text: 'male low'
+     },
+     labelRight: {
+       text: 'male top'
+     }
+   },
+   {
+     values: [400, 520, 550],
+     colors: ['#aad356', '#61B77F', '#189aa8']
+   }
+  ]
+});</code></pre>
+
+        <p class="code-caption">ES6 modules usage:</p>
+    
+    <pre class="prettyprint"><code>import { BoxPlot } from 'oecd-simple-charts';
+import 'oecd-simple-charts/build/oecd-simple-charts.css'
+
+const boxPlot = new BoxPlot({ chartOptions });</code></pre>
 
 
 
@@ -940,7 +949,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line103">line 103</a>
+        <a href="BoxPlot.js.html">BoxPlot.js</a>, <a href="BoxPlot.js.html#line109">line 109</a>
     </li></ul></dd>
     
 
