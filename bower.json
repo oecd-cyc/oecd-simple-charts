@@ -1,0 +1,26 @@
+{
+  "name": "oecd-simple-charts",
+  "description": "D3 charting library for creating pearl charts, stacked bar charts and box plots",
+  "main": "build/oecd-simple-charts.js",
+  "authors": [
+    "[object Object]"
+  ],
+  "license": "See license file LICENSE",
+  "keywords": [
+    "D3",
+    "charts",
+    "data",
+    "visualization"
+  ],
+  "homepage": "https://github.com/oecd-cyc/oecd-simple-charts",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "screenshots",
+    "public"
+  ]
+}
