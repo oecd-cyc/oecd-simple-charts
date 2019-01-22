@@ -6920,11 +6920,12 @@ var RadialBarChart = function (_OECDChart) {
 
     _this.defaultOptions = {
       container: null,
-      margin: 0,
       innerRadius: 100,
       innerMargin: 120,
-      labelOffset: 20,
-      data: getFakeData(5, 30)
+      labelOffset: 10,
+      data: getFakeData(5, 60),
+      sortBy: 'indicator0',
+      indicators: ['indicator0', 'indicator1', 'indicator2', 'indicator3', 'indicator4']
     };
 
     _this.init(options);
@@ -6936,24 +6937,30 @@ var RadialBarChart = function (_OECDChart) {
     value: function render() {
       var _options = this.options,
           container = _options.container,
-          margin = _options.margin,
           innerRadius = _options.innerRadius,
           innerMargin = _options.innerMargin,
           data = _options.data,
-          labelOffset = _options.labelOffset;
+          labelOffset = _options.labelOffset,
+          sortBy = _options.sortBy,
+          indicators = _options.indicators;
 
 
+      var sortIndex = indicators.indexOf(sortBy);
+      var sortedData = data.sort(function (a, b) {
+        return a.data[sortIndex] - b.data[sortIndex];
+      });
       var d3Container = d3Select(container);
-      var outerSize = d3Container.node().clientWidth;
-      var innerSize = outerSize - 2 * margin;
+      var size = d3Container.node().clientWidth;
 
-      var svg = d3Container.append('svg').attr('width', outerSize).attr('height', outerSize).append('g').attr('transform', 'translate(' + innerSize / 2 + ', ' + innerSize / 2 + ')');
+      var svg = d3Container.append('svg').attr('width', size).attr('height', size).append('g');
 
-      var numArcs = data[0].data.length;
-      var chartHeight = innerSize / 2 - innerMargin - innerRadius;
+      var centeredGroup = svg.append('g').attr('transform', 'translate(' + size / 2 + ', ' + size / 2 + ')');
+
+      var numArcs = sortedData[0].data.length;
+      var chartHeight = size / 2 - innerMargin - innerRadius;
       var arcWidth = chartHeight / numArcs;
-      var step$$1 = Math.PI * 1.5 / data.length;
-      var stepSize = Math.PI * 2 * (innerSize / 2 - innerMargin) * 0.75 / data.length;
+      var step$$1 = Math.PI * 1.5 / sortedData.length;
+      var stepSize = Math.PI * 2 * (size / 2 - innerMargin) * 0.75 / sortedData.length;
 
       var getStartAngle = function getStartAngle(d, i) {
         return d.column * step$$1;
@@ -6961,8 +6968,8 @@ var RadialBarChart = function (_OECDChart) {
       var getEndAngle = function getEndAngle(d, i) {
         return d.column * step$$1 + step$$1;
       };
-      var getAnimationDelay = function getAnimationDelay(d, i) {
-        return i * (1000 / data.length);
+      var getAnimationDelay = function getAnimationDelay(i) {
+        return i * (1000 / sortedData.length);
       };
 
       var arcGenerator = d3Arc().innerRadius(function (d, i) {
@@ -6975,37 +6982,61 @@ var RadialBarChart = function (_OECDChart) {
         return d.endAngle;
       });
 
-      svg.selectAll('.arc-group').data(data).enter().append('g').selectAll('.arc').data(function (d, i) {
+      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true);
+
+      arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
         return d.data.map(function (dx, ix) {
           return {
             value: dx,
             startAngle: getStartAngle(d, i),
             endAngle: getEndAngle(d, i),
             color: schemeCategory10[ix],
-            animationDelay: getAnimationDelay(d, i)
+            index: i
           };
         });
       }).enter().append('path').attr('d', arcGenerator).attr('fill', function (d) {
         return d.color;
       }).attr('fill-opacity', function (d) {
         return d.value + .5;
-      }).attr('stroke', '#fff').attr('stroke-width', 1).on('mouseenter', this.handleMouseEnter).on('mouseleave', this.handleMouseLeave).attr('opacity', 0).transition().delay(function (d) {
-        return d.animationDelay;
+      }).on('mouseenter', this.handleMouseEnter).on('mouseleave', this.handleMouseLeave);
+
+      arcGroups.append('g').classed('label-container', true).attr('transform', function (d, i) {
+        return 'rotate(' + (rad2deg$1(i * step$$1) - 90) + ')';
+      }).append('text').attr('x', size / 2 - innerMargin + labelOffset).attr('y', stepSize / 2).attr('dominant-baseline', 'middle').text(function (d) {
+        return d.column;
+      }).on('mouseenter', this.handleTextMouseEnter).on('mouseleave', this.handleTextMouseLeave);
+
+      arcGroups.attr('opacity', 0).transition().duration(500).delay(function (d, i) {
+        return getAnimationDelay(i);
       }).attr('opacity', 1);
 
-      svg.selectAll('.label-group').data(data).enter().append('g').attr('transform', function (d, i) {
-        return 'rotate(' + (rad2deg$1(i * step$$1) - 90) + ')';
-      }).append('text').attr('x', innerSize / 2 - innerMargin + labelOffset).attr('y', stepSize / 2).attr('dominant-baseline', 'middle').text('Example Label');
+      var legendGroup = svg.append('g').classed('legend-group', true).attr('transform', 'translate(' + (innerMargin + labelOffset) + ', ' + (innerMargin + labelOffset) + ')');
+
+      legendGroup.selectAll('.legend-row').data(indicators).enter().append('g').attr('transform', function (d, i) {
+        return 'translate(0, ' + arcWidth * i + ')';
+      }).classed('legend-row', true).append('text').text(function (d) {
+        return d;
+      });
+    }
+  }, {
+    key: 'handleTextMouseEnter',
+    value: function handleTextMouseEnter() {
+      d3Select(this).attr('fill', '#f00');
+    }
+  }, {
+    key: 'handleTextMouseLeave',
+    value: function handleTextMouseLeave() {
+      d3Select(this).attr('fill', '#000');
     }
   }, {
     key: 'handleMouseEnter',
     value: function handleMouseEnter() {
-      d3Select(this).attr('stroke', '#000');
+      d3Select(this).style('outline', '#000');
     }
   }, {
     key: 'handleMouseLeave',
     value: function handleMouseLeave() {
-      d3Select(this).attr('stroke', '#fff');
+      d3Select(this).style('outline', '#fff');
     }
   }]);
   return RadialBarChart;
