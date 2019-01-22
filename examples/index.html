@@ -18,6 +18,8 @@
       <button id="stackedchart__button">Update Stacked Bar Chart</button>
       <div id="BoxPlotExample"></div>
       <button id="boxplot__button">Update Box Plot</button>
+      <div id="RadialBarChartExample"></div>
+      <button id="boxplot__button">Update Radial Bar Chart</button>
     </div>
 
     <script>
@@ -85,8 +87,6 @@
         }
       ]
     });
-
-
 
     document.getElementById('stackedchart__button').onclick = function() {
       StackedChartExample.update([
@@ -159,6 +159,11 @@
         }
       ]);
     }
+
+    var RadialBarChartExample = new OECDCharts.RadialBarChart({
+      container: '#RadialBarChartExample',
+      title: 'Radial Bar Chart'
+    });
     </script>
   </body>
 </html>
