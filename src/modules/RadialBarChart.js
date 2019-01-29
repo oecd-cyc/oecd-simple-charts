@@ -1,25 +1,11 @@
 import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
 import { arc as d3Arc } from 'd3-shape';
-import { schemeCategory10 } from 'd3-scale-chromatic';
+import { max as d3Max, range as d3Range } from 'd3-array';
+import Chroma from 'chroma-js';
+
+console.log(Chroma);
 
 import OECDChart from './OECDChart';
-
-function getFakeData(rows, columns) {
-  const result = [];
-
-  for (let col = 0; col < columns; col++) {
-    const tmp = { column: col, data: [] };
-  
-    for (let row = 0; row < rows; row++) {
-
-      tmp.data.push(Math.random());
-    }
-
-    result.push(tmp);
-  }
-
-  return result;
-}
 
 function rad2deg(rad) {
   return rad / Math.PI * 180;
@@ -32,11 +18,14 @@ class RadialBarChart extends OECDChart {
     this.defaultOptions = {
       container: null,
       innerRadius: 100,
-      innerMargin: 120,
+      innerMargin: 80,
       labelOffset: 10,
-      data: getFakeData(5, 60),
-      sortBy: 'indicator0',
-      indicators: ['indicator0', 'indicator1', 'indicator2', 'indicator3', 'indicator4'],
+      data: [],
+      rows: [],
+      rowLabels: [],
+      columns: '',
+      sortBy: false,
+      colorSteps: 3,
     };
 
     this.init(options);
@@ -49,12 +38,14 @@ class RadialBarChart extends OECDChart {
       innerMargin,
       data,
       labelOffset,
-      sortBy,
-      indicators
+      rows,
+      rowColors,
+      rowLabels,
+      columns,
+      colorSteps,
     } = this.options;
 
-    const sortIndex = indicators.indexOf(sortBy);
-    const sortedData = data.sort((a, b) => a.data[sortIndex] - b.data[sortIndex]);
+    const sortedData = data;
     const d3Container = d3Select(container);
     const size = d3Container.node().clientWidth;
 
@@ -68,15 +59,14 @@ class RadialBarChart extends OECDChart {
       .append('g')
       .attr('transform', `translate(${size / 2}, ${size / 2})`);
     
-    const numArcs = sortedData[0].data.length;
-    const chartHeight = (size / 2) - innerMargin - innerRadius
-    const arcWidth = chartHeight / numArcs;
+    const radius = size / 2;
+    const chartHeight = radius - innerMargin - innerRadius;
+    const arcWidth = chartHeight / rows.length;
     const step = (Math.PI * 1.5) / sortedData.length;
-    const stepSize = ((Math.PI * 2 * ((size / 2) - innerMargin)) * 0.75) / sortedData.length;
 
-    const getStartAngle = (d, i) => d.column * step;
-    const getEndAngle = (d, i) => d.column * step + step;
-    const getAnimationDelay = (i) => i * (1000 / sortedData.length);
+    const getStartAngle = (d, i) => i * step;
+    const getEndAngle = (d, i) => i * step + step;
+    const getAnimationDelay = (i) => i * (500 / sortedData.length);
     
     const arcGenerator = d3Arc()
       .innerRadius((d, i) => i * arcWidth + innerRadius)
@@ -95,12 +85,12 @@ class RadialBarChart extends OECDChart {
       .append('g')
       .classed('arc-container', true)
       .selectAll('.arc')
-      .data((d, i) => d.data.map((dx, ix) => {
+      .data((d, i) => rows.map((row, rowIndex) => {
         return {
-          value: dx,
+          value: +d[row],
           startAngle: getStartAngle(d, i),
           endAngle: getEndAngle(d, i),
-          color: schemeCategory10[ix],
+          color: rowColors[rowIndex],
           index: i,
         }
       }))
@@ -115,34 +105,69 @@ class RadialBarChart extends OECDChart {
     arcGroups
       .append('g')
       .classed('label-container', true)
-      .attr('transform', (d, i) => `rotate(${rad2deg(i * step) - 90})`)
+      .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
       .append('text')
-      .attr('x', size / 2 - innerMargin + labelOffset)
-      .attr('y', stepSize / 2)
+      .classed('column-label', true)
+      .attr('x', radius - innerMargin + labelOffset)
+      .attr('y', 0)
       .attr('dominant-baseline', 'middle')
-      .text(d => d.column)
+      .text((d, i) => d[columns])
       .on('mouseenter', this.handleTextMouseEnter)
       .on('mouseleave', this.handleTextMouseLeave);
     
     arcGroups
       .attr('opacity', 0)
       .transition()
-      .duration(500)
+      .duration(0)
       .delay((d, i) => getAnimationDelay(i))
       .attr('opacity', 1);
     
     const legendGroup = svg.append('g')
       .classed('legend-group', true)
-      .attr('transform', `translate(${innerMargin + labelOffset}, ${innerMargin + labelOffset})`);
+      .attr('transform', `translate(0, ${innerMargin + labelOffset})`);
     
-    legendGroup.selectAll('.legend-row')
-      .data(indicators)
+    const legendRows = legendGroup.selectAll('.legend-row')
+      .data(rowLabels)
       .enter()
       .append('g')
       .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
       .classed('legend-row', true)
-      .append('text')
-      .text(d => d);
+      
+      const svgRowLabels = legendRows.append('text')
+      .text(d => d)
+      .classed('row-label', true);
+    
+    const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
+    const remainingSpace = radius - longestLabel - 30;
+    
+    svgRowLabels
+      .attr('x', ~~longestLabel + 10)
+      .attr('text-anchor', 'end');
+    
+    const legendColorGroups = legendRows
+      .append('g')
+      .attr('transform', `translate(${~~longestLabel + 20}, 0)`);
+    
+    const colorRange = d3Range(0, colorSteps, 1);
+    const colorBlockWidth = remainingSpace / colorSteps;
+    const lightenFactor = 0.75 / colorSteps;
+
+    const colorData = rows.map((row, i) => {
+      const baseColor = rowColors[i];
+      return colorRange.map((step, i) => Chroma.mix(baseColor, '#fff', i * lightenFactor).hex()) //chroma(baseColor).lighten(i * lightenFactor).hex());
+    });
+    
+    const legendColorBlocks = legendColorGroups
+      .selectAll('.color-block')
+      .data((d, i) => colorData[i])
+      .enter()
+      .append('rect')
+      .classed('color-block', true)
+      .attr('x', (d, i) => i * colorBlockWidth)
+      .attr('y', 0)
+      .attr('width', colorBlockWidth)
+      .attr('height', arcWidth)
+      .attr('fill', (d, i) => d);
   }
 
   handleTextMouseEnter() {

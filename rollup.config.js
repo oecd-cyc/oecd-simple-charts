@@ -6,8 +6,9 @@ import stylus from 'stylus';
 import autoprefixer from 'autoprefixer';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
+import commonjs from 'rollup-plugin-commonjs';
 import cssnano from 'cssnano';
-import pkg from './package.json'
+import pkg from './package.json';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -44,6 +45,9 @@ const plugins = [
     extensions: ['.styl'],
     extract: true,
     plugins: postcssPlugins
+  }),
+  commonjs({
+    include: 'node_modules/**'
   }),
   !isProd && livereload({
     watch: ['examples', 'build']

@@ -79,8 +79,10 @@
     "babel": "inherit"
   },
   "dependencies": {
+    "chroma-js": "^2.0.2",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",
+    "d3-color": "^1.2.3",
     "d3-dispatch": "^1.0.3",
     "d3-format": "^1.2.2",
     "d3-scale": "^2.0.0",
@@ -89,6 +91,7 @@
     "d3-shape": "^1.2.2",
     "d3-transition": "^1.1.1",
     "faker": "^4.1.0",
-    "lodash-es": "^4.17.5"
+    "lodash-es": "^4.17.5",
+    "rollup-plugin-commonjs": "^9.2.0"
   }
 }
