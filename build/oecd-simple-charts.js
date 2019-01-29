@@ -9674,8 +9674,6 @@ var chroma = createCommonjsModule(function (module, exports) {
 })));
 });
 
-console.log(chroma);
-
 function rad2deg$1(rad) {
   return rad / Math.PI * 180;
 }

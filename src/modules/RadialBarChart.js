@@ -3,8 +3,6 @@ import { arc as d3Arc } from 'd3-shape';
 import { max as d3Max, range as d3Range } from 'd3-array';
 import Chroma from 'chroma-js';
 
-console.log(Chroma);
-
 import OECDChart from './OECDChart';
 
 function rad2deg(rad) {
