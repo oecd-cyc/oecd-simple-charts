@@ -79,7 +79,6 @@
     "babel": "inherit"
   },
   "dependencies": {
-    "chroma-js": "^2.0.2",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",
     "d3-color": "^1.2.3",

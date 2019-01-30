@@ -1,7 +1,8 @@
 import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
 import { arc as d3Arc } from 'd3-shape';
-import { max as d3Max, range as d3Range } from 'd3-array';
-import Chroma from 'chroma-js';
+import { max as d3Max, range as d3Range, extent as d3Extent } from 'd3-array';
+import { hsl as d3Color } from 'd3-color';
+import { scaleThreshold as d3ScaleQuantize } from 'd3-scale';
 
 import OECDChart from './OECDChart';
 
@@ -23,7 +24,7 @@ class RadialBarChart extends OECDChart {
       rowLabels: [],
       columns: '',
       sortBy: false,
-      colorSteps: 3,
+      colorSteps: 5,
     };
 
     this.init(options);
@@ -67,28 +68,42 @@ class RadialBarChart extends OECDChart {
     const getAnimationDelay = (i) => i * (500 / sortedData.length);
     
     const arcGenerator = d3Arc()
-      .innerRadius((d, i) => i * arcWidth + innerRadius)
-      .outerRadius((d, i) => i * arcWidth + innerRadius + arcWidth)
+      .innerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius)
+      .outerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius + arcWidth)
       .startAngle((d, i) => d.startAngle)
       .endAngle((d, i) => d.endAngle);
+
+    const colorRange = d3Range(0, colorSteps, 1);
+    const lightenFactor = 2 / colorSteps;
+
+    const colorData = rows.map((row, i) => {
+      const baseColor = d3Color(rowColors[i]);
+      const colors = colorRange.map((step, i) => baseColor.brighter(i * lightenFactor).hex());
+      const extent = d3Extent(data, d => +d[row]);
+      return d3ScaleQuantize().domain(extent).range(colors);
+    });
 
     const arcGroups = centeredGroup
       .selectAll('.arc-group')
       .data(sortedData)
       .enter()
       .append('g')
-      .classed('arc-group', true);
+      .classed('arc-group', true)
+      .on('mouseenter', this.handleGroupMouseEnter.bind(this))
+      .on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
     arcGroups
       .append('g')
       .classed('arc-container', true)
       .selectAll('.arc')
       .data((d, i) => rows.map((row, rowIndex) => {
+        const value = +d[row];
+
         return {
-          value: +d[row],
+          value,
           startAngle: getStartAngle(d, i),
           endAngle: getEndAngle(d, i),
-          color: rowColors[rowIndex],
+          color: colorData[rowIndex](value),
           index: i,
         }
       }))
@@ -96,9 +111,7 @@ class RadialBarChart extends OECDChart {
       .append('path')
       .attr('d', arcGenerator)
       .attr('fill', d => d.color)
-      .attr('fill-opacity', d => d.value + .5)
-      .on('mouseenter', this.handleMouseEnter)
-      .on('mouseleave', this.handleMouseLeave);
+      .attr('fill-opacity', d => d.value + .5);
 
     arcGroups
       .append('g')
@@ -109,10 +122,8 @@ class RadialBarChart extends OECDChart {
       .attr('x', radius - innerMargin + labelOffset)
       .attr('y', 0)
       .attr('dominant-baseline', 'middle')
-      .text((d, i) => d[columns])
-      .on('mouseenter', this.handleTextMouseEnter)
-      .on('mouseleave', this.handleTextMouseLeave);
-    
+      .text((d, i) => d[columns]);
+          
     arcGroups
       .attr('opacity', 0)
       .transition()
@@ -122,7 +133,7 @@ class RadialBarChart extends OECDChart {
     
     const legendGroup = svg.append('g')
       .classed('legend-group', true)
-      .attr('transform', `translate(0, ${innerMargin + labelOffset})`);
+      .attr('transform', `translate(0, ${innerMargin})`);
     
     const legendRows = legendGroup.selectAll('.legend-row')
       .data(rowLabels)
@@ -131,7 +142,7 @@ class RadialBarChart extends OECDChart {
       .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
       .classed('legend-row', true)
       
-      const svgRowLabels = legendRows.append('text')
+    const svgRowLabels = legendRows.append('text')
       .text(d => d)
       .classed('row-label', true);
     
@@ -140,50 +151,43 @@ class RadialBarChart extends OECDChart {
     
     svgRowLabels
       .attr('x', ~~longestLabel + 10)
-      .attr('text-anchor', 'end');
+      .attr('y', arcWidth / 2)
+      .attr('text-anchor', 'end')
+      .attr('alignment-baseline', 'middle');
     
     const legendColorGroups = legendRows
       .append('g')
       .attr('transform', `translate(${~~longestLabel + 20}, 0)`);
     
-    const colorRange = d3Range(0, colorSteps, 1);
     const colorBlockWidth = remainingSpace / colorSteps;
-    const lightenFactor = 0.75 / colorSteps;
 
-    const colorData = rows.map((row, i) => {
-      const baseColor = rowColors[i];
-      return colorRange.map((step, i) => Chroma.mix(baseColor, '#fff', i * lightenFactor).hex()) //chroma(baseColor).lighten(i * lightenFactor).hex());
-    });
-    
+    const blockHeight = Math.min(arcWidth, 30);
+    const blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
+
     const legendColorBlocks = legendColorGroups
       .selectAll('.color-block')
-      .data((d, i) => colorData[i])
+      .data((d, i) => colorData[i].range())
       .enter()
       .append('rect')
       .classed('color-block', true)
       .attr('x', (d, i) => i * colorBlockWidth)
-      .attr('y', 0)
+      .attr('y', blockOffset)
       .attr('width', colorBlockWidth)
-      .attr('height', arcWidth)
-      .attr('fill', (d, i) => d);
+      .attr('height', blockHeight)
+      .attr('fill', (d, i) => d)
+      .style('stroke', '#fff')
+      .style('stroke-width', 0);
+    
+    this.arcGroups = arcGroups;
   }
 
-  handleTextMouseEnter() {
-    d3Select(this).attr('fill', '#f00');
+  handleGroupMouseEnter(d, i) {
+    this.arcGroups.style('opacity', .4).filter((d, j) => i === j).style('opacity', 1);
   }
 
-  handleTextMouseLeave() {
-    d3Select(this).attr('fill', '#000');
+  handleGroupMouseLeave() {
+    this.arcGroups.style('opacity', 1);
   }
-
-  handleMouseEnter() {
-    d3Select(this).style('outline', '#000');
-  }
-
-  handleMouseLeave() {
-    d3Select(this).style('outline', '#fff');
-  }
-
 }
 
 export default RadialBarChart;
