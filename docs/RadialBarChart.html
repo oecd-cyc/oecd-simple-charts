@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>RadialBarChart - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BoxPlot.html">BoxPlot</a><ul class='methods'><li data-type='method'><a href="BoxPlot.html#update">update</a></li></ul></li><li><a href="PearlChart.html">PearlChart</a><ul class='methods'><li data-type='method'><a href="PearlChart.html#update">update</a></li></ul></li><li><a href="RadialBarChart.html">RadialBarChart</a></li><li><a href="StackedChart.html">StackedChart</a><ul class='methods'><li data-type='method'><a href="StackedChart.html#update">update</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">RadialBarChart</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        RadialBarChart
+        </h2>
+        
+            <div class="class-description"><p>A RadialBarChart Component.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="RadialBarChart"><span class="type-signature"></span>new RadialBarChart<span class="signature">(options)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="RadialBarChart.js.html">RadialBarChart.js</a>, <a href="RadialBarChart.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Examples</h5>
+    
+        <p class="code-caption">browser usage:</p>
+    
+    <pre class="prettyprint"><code>    var RadialBarChartExample = new OECDCharts.RadialBarChart({
+      container: '#RadialBarChartExample',
+      title: 'Radial Bar Chart',
+      renderInfoButton: true,
+      rows: ['political', 'societal', 'economic', 'environmental', 'security'],
+      rowLabels: ['Political Label', 'Societal Label', 'Economic Label', 'Environmental Label', 'SecurityLabel'],
+      rowColors: ['#492242', '#026c6d', '#9d461d', '#4b6d27', '#eaae15'],
+      columns: 'country',
+      data: [
+        {"country":"Yemen","political":0.08377711086932882,"societal":0.42466597374735526,"economic":0.8177145671512998,"environmental":0.30107512488904686,"security":0.7208149715058103},
+        {"country":"Zimbabwe","political":0.19584282893442895,"societal":0.5565456581754631,"economic":0.5097090125574546,"environmental":0.13615832272842088,"security":0.5664120991477379},
+        //...
+      ]
+    });</code></pre>
+
+        <p class="code-caption">ES6 modules usage:</p>
+    
+    <pre class="prettyprint"><code>import { RadialBarChart } from 'oecd-simple-charts';
+import 'oecd-simple-charts/build/oecd-simple-charts.css'
+
+const radialBarChart = new RadialBarChart({ chartOptions });</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The options object for the pearl chart.</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>container</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The DOM element to use as container</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The title to display</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>renderInfoButton</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>The info-Icon for the tooltip, renders after the title</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The data as array. i.e.:</p>
+<pre class="prettyprint source"><code>   [
+     {&quot;country&quot;:&quot;Yemen&quot;,&quot;political&quot;:0.08377711086932882,&quot;societal&quot;:0.42466597374735526,&quot;economic&quot;:0.8177145671512998,&quot;environmental&quot;:0.30107512488904686,&quot;security&quot;:0.7208149715058103},
+     {&quot;country&quot;:&quot;Zimbabwe&quot;,&quot;political&quot;:0.19584282893442895,&quot;societal&quot;:0.5565456581754631,&quot;economic&quot;:0.5097090125574546,&quot;environmental&quot;:0.13615832272842088,&quot;security&quot;:0.5664120991477379},
+     //...
+   ]</code></pre></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

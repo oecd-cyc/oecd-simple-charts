@@ -8583,6 +8583,44 @@ function getColorRange(base, amount, lightness) {
   });
 }
 
+/**
+ * A RadialBarChart Component.
+ *
+ * @example <caption>browser usage:</caption>
+    var RadialBarChartExample = new OECDCharts.RadialBarChart({
+      container: '#RadialBarChartExample',
+      title: 'Radial Bar Chart',
+      renderInfoButton: true,
+      rows: ['political', 'societal', 'economic', 'environmental', 'security'],
+      rowLabels: ['Political Label', 'Societal Label', 'Economic Label', 'Environmental Label', 'SecurityLabel'],
+      rowColors: ['#492242', '#026c6d', '#9d461d', '#4b6d27', '#eaae15'],
+      columns: 'country',
+      data: [
+        {"country":"Yemen","political":0.08377711086932882,"societal":0.42466597374735526,"economic":0.8177145671512998,"environmental":0.30107512488904686,"security":0.7208149715058103},
+        {"country":"Zimbabwe","political":0.19584282893442895,"societal":0.5565456581754631,"economic":0.5097090125574546,"environmental":0.13615832272842088,"security":0.5664120991477379},
+        //...
+      ]
+    });
+  * @example <caption>ES6 modules usage:</caption>
+  * import { RadialBarChart } from 'oecd-simple-charts';
+  * import 'oecd-simple-charts/build/oecd-simple-charts.css'
+  *
+  * const radialBarChart = new RadialBarChart({ chartOptions });
+  * @constructor
+  * @param {object} options - The options object for the pearl chart.
+  * @param {string} options.container - The DOM element to use as container
+  * @param {string} options.title - The title to display
+  * @param {bool}  [options.renderInfoButton = false] - The info-Icon for the tooltip, renders after the title
+  * @param {array}  options.data - The data as array. i.e.:
+  * ```
+  *    [
+  *      {"country":"Yemen","political":0.08377711086932882,"societal":0.42466597374735526,"economic":0.8177145671512998,"environmental":0.30107512488904686,"security":0.7208149715058103},
+  *      {"country":"Zimbabwe","political":0.19584282893442895,"societal":0.5565456581754631,"economic":0.5097090125574546,"environmental":0.13615832272842088,"security":0.5664120991477379},
+  *      //...
+  *    ]
+  * ```
+  */
+
 var RadialBarChart = function (_OECDChart) {
   inherits(RadialBarChart, _OECDChart);
 
