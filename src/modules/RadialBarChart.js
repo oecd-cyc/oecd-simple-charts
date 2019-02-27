@@ -1,13 +1,28 @@
 import { select as d3Select, selectAll as d3SelectAll } from 'd3-selection';
 import { arc as d3Arc } from 'd3-shape';
-import { max as d3Max, range as d3Range, extent as d3Extent } from 'd3-array';
-import { hsl as d3Color } from 'd3-color';
-import { scaleThreshold as d3ScaleQuantize } from 'd3-scale';
+import { max as d3Max, range as d3Range, extent as d3Extent, min as d3Min } from 'd3-array';
+import color from 'color';
+import { scaleQuantize as d3ScaleQuantize } from 'd3-scale';
 
 import OECDChart from './OECDChart';
 
 function rad2deg(rad) {
   return rad / Math.PI * 180;
+}
+
+function getColorRange(base, amount, lightness) {
+  return d3Range(0, amount, 1).map(step => {
+    return color(base)
+      .mix(color('#fff'), (lightness / 100) * step / amount);
+  });
+}
+
+function getExtent(data, rows) {
+  const maxValues = data.map(d => d3Max(rows, row => d[row]));
+  const minValues = data.map(d => d3Min(rows, row => d[row]));
+  const min = d3Min(minValues);
+  const max = d3Max(maxValues);
+  return [min, max];
 }
 
 class RadialBarChart extends OECDChart {
@@ -16,8 +31,8 @@ class RadialBarChart extends OECDChart {
 
     this.defaultOptions = {
       container: null,
-      innerRadius: 100,
-      innerMargin: 80,
+      innerRadius: 50,
+      innerMargin: 100,
       labelOffset: 10,
       data: [],
       rows: [],
@@ -25,6 +40,11 @@ class RadialBarChart extends OECDChart {
       columns: '',
       sortBy: false,
       colorSteps: 5,
+      lightnessFactor: 80,
+      strokeColor: '#fff',
+      strokeWidth: 0.5,
+      hoverStrokeColor: '#111',
+      hoverStrokeWidth: 1,
     };
 
     this.init(options);
@@ -42,14 +62,27 @@ class RadialBarChart extends OECDChart {
       rowLabels,
       columns,
       colorSteps,
+      lightnessFactor,
+      strokeColor,
+      strokeWidth,
+      hoverStrokeColor,
+      hoverStrokeWidth,
+      sortBy,
     } = this.options;
 
-    const sortedData = data;
+    const that = this;
+
+    const sortKey = sortBy || rows[0];
+    const sortedData = data.sort((a, b) => b[sortKey] - a[sortKey]);
     const d3Container = d3Select(container);
+
     const size = d3Container.node().clientWidth;
+
+    d3Container.selectAll('.oecd-chart__svg').remove();
 
     const svg = d3Container
       .append('svg')
+      .classed('oecd-chart__svg', true)
       .attr('width', size)
       .attr('height', size)
       .append('g');
@@ -73,14 +106,12 @@ class RadialBarChart extends OECDChart {
       .startAngle((d, i) => d.startAngle)
       .endAngle((d, i) => d.endAngle);
 
-    const colorRange = d3Range(0, colorSteps, 1);
-    const lightenFactor = 2 / colorSteps;
+    // const extent = getExtent(data, rows);
 
     const colorData = rows.map((row, i) => {
-      const baseColor = d3Color(rowColors[i]);
-      const colors = colorRange.map((step, i) => baseColor.brighter(i * lightenFactor).hex());
+      const colors = getColorRange(rowColors[i], colorSteps, lightnessFactor);
       const extent = d3Extent(data, d => +d[row]);
-      return d3ScaleQuantize().domain(extent).range(colors);
+      return d3ScaleQuantize().domain(extent).range(colors.slice(0).reverse());
     });
 
     const arcGroups = centeredGroup
@@ -105,13 +136,38 @@ class RadialBarChart extends OECDChart {
           endAngle: getEndAngle(d, i),
           color: colorData[rowIndex](value),
           index: i,
+          parentData: d
         }
       }))
       .enter()
       .append('path')
       .attr('d', arcGenerator)
       .attr('fill', d => d.color)
-      .attr('fill-opacity', d => d.value + .5);
+      .attr('stroke', strokeColor)
+      .attr('stroke-width', strokeWidth)
+      .on('mouseenter', function(d) {
+        this.parentNode.appendChild(this);
+        d3Select(this)
+          .attr('stroke-width', hoverStrokeWidth)
+          .attr('stroke', hoverStrokeColor);
+        
+        that.event.emit('mouseenter', d);
+      })
+      .on('mouseleave', function(d) {
+        d3Select(this)
+          .attr('stroke-width', 1)
+          .attr('stroke', strokeColor);
+
+        that.event.emit('mouseleave', d);
+      })
+      .on('click', function(d) {
+        this.parentNode.appendChild(this);
+        d3Select(this)
+          .attr('stroke-width', hoverStrokeWidth)
+          .attr('stroke', hoverStrokeColor);
+
+        that.event.emit('click', d);
+      });
 
     arcGroups
       .append('g')
@@ -157,7 +213,12 @@ class RadialBarChart extends OECDChart {
     
     const legendColorGroups = legendRows
       .append('g')
-      .attr('transform', `translate(${~~longestLabel + 20}, 0)`);
+      .attr('transform', `translate(${~~longestLabel + 20}, 0)`)
+      .on('click', (d, i) => {
+        this.options.sortBy = rows[i];
+        this.event.emit('sort', this.options.sortBy);
+        this.render();
+      });
     
     const colorBlockWidth = remainingSpace / colorSteps;
 
@@ -166,7 +227,7 @@ class RadialBarChart extends OECDChart {
 
     const legendColorBlocks = legendColorGroups
       .selectAll('.color-block')
-      .data((d, i) => colorData[i].range())
+      .data((d, i) => colorData[i].range().slice(0).reverse())
       .enter()
       .append('rect')
       .classed('color-block', true)
@@ -175,18 +236,23 @@ class RadialBarChart extends OECDChart {
       .attr('width', colorBlockWidth)
       .attr('height', blockHeight)
       .attr('fill', (d, i) => d)
-      .style('stroke', '#fff')
-      .style('stroke-width', 0);
     
     this.arcGroups = arcGroups;
   }
 
-  handleGroupMouseEnter(d, i) {
-    this.arcGroups.style('opacity', .4).filter((d, j) => i === j).style('opacity', 1);
+  update(options = {}) {
+    this.options = Object.assign({}, this.options, options);
+    this.render();
   }
 
-  handleGroupMouseLeave() {
+  handleGroupMouseEnter(d, i) {
+    this.arcGroups.style('opacity', .4).filter((d, j) => i === j).style('opacity', 1);
+    this.event.emit('mouseenter.group', d);
+  }
+
+  handleGroupMouseLeave(d, i) {
     this.arcGroups.style('opacity', 1);
+    this.event.emit('mouseleave.group', d);
   }
 }
 
