@@ -44,7 +44,8 @@ class RadialBarChart extends OECDChart {
       strokeColor: '#fff',
       strokeWidth: 0.5,
       hoverStrokeColor: '#111',
-      hoverStrokeWidth: 1,
+      hoverStrokeWidth: 2,
+      hoverOpacity: 0.5
     };
 
     this.init(options);
@@ -120,7 +121,7 @@ class RadialBarChart extends OECDChart {
       .enter()
       .append('g')
       .classed('arc-group', true)
-      .on('mouseenter', this.handleGroupMouseEnter.bind(this))
+      .on('mouseenter', this.handleGroupMouseEnter(this))
       .on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
     arcGroups
@@ -178,7 +179,11 @@ class RadialBarChart extends OECDChart {
       .attr('x', radius - innerMargin + labelOffset)
       .attr('y', 0)
       .attr('dominant-baseline', 'middle')
-      .text((d, i) => d[columns]);
+      .text((d, i) => d[columns])
+      .filter((d, i) => i > data.length / 3 * 2)
+      .attr('transform', 'scale(-1,-1)')
+      .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
+      .attr('text-anchor', 'end')
           
     arcGroups
       .attr('opacity', 0)
@@ -245,9 +250,12 @@ class RadialBarChart extends OECDChart {
     this.render();
   }
 
-  handleGroupMouseEnter(d, i) {
-    this.arcGroups.style('opacity', .4).filter((d, j) => i === j).style('opacity', 1);
-    this.event.emit('mouseenter.group', d);
+  handleGroupMouseEnter(that) {
+    return function(d, i) {
+      this.parentNode.appendChild(this);
+      that.arcGroups.style('opacity', that.options.hoverOpacity).filter((d, j) => i === j).style('opacity', 1);
+      that.event.emit('mouseenter.group', d);
+    }
   }
 
   handleGroupMouseLeave(d, i) {

@@ -8607,7 +8607,8 @@ var RadialBarChart = function (_OECDChart) {
       strokeColor: '#fff',
       strokeWidth: 0.5,
       hoverStrokeColor: '#111',
-      hoverStrokeWidth: 1
+      hoverStrokeWidth: 2,
+      hoverOpacity: 0.5
     };
 
     _this.init(options);
@@ -8689,7 +8690,7 @@ var RadialBarChart = function (_OECDChart) {
         return quantize$1().domain(extent$$1).range(colors.slice(0).reverse());
       });
 
-      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter.bind(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
+      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
       arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
         return rows.map(function (row, rowIndex) {
@@ -8726,7 +8727,9 @@ var RadialBarChart = function (_OECDChart) {
         return 'rotate(' + (rad2deg$1(i * step$$1 + step$$1 / 2) - 90) + ')';
       }).append('text').classed('column-label', true).attr('x', radius - innerMargin + labelOffset).attr('y', 0).attr('dominant-baseline', 'middle').text(function (d, i) {
         return d[columns];
-      });
+      }).filter(function (d, i) {
+        return i > data.length / 3 * 2;
+      }).attr('transform', 'scale(-1,-1)').attr('transform-origin', radius - innerMargin + labelOffset + ' 0').attr('text-anchor', 'end');
 
       arcGroups.attr('opacity', 0).transition().duration(0).delay(function (d, i) {
         return getAnimationDelay(i);
@@ -8780,11 +8783,14 @@ var RadialBarChart = function (_OECDChart) {
     }
   }, {
     key: 'handleGroupMouseEnter',
-    value: function handleGroupMouseEnter(d, i) {
-      this.arcGroups.style('opacity', .4).filter(function (d, j) {
-        return i === j;
-      }).style('opacity', 1);
-      this.event.emit('mouseenter.group', d);
+    value: function handleGroupMouseEnter(that) {
+      return function (d, i) {
+        this.parentNode.appendChild(this);
+        that.arcGroups.style('opacity', that.options.hoverOpacity).filter(function (d, j) {
+          return i === j;
+        }).style('opacity', 1);
+        that.event.emit('mouseenter.group', d);
+      };
     }
   }, {
     key: 'handleGroupMouseLeave',
