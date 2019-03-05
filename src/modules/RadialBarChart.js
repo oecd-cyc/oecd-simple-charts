@@ -218,10 +218,10 @@ class RadialBarChart extends OECDChart {
       .attr('y', 0)
       .attr('dominant-baseline', 'middle')
       .text((d, i) => d[columns])
-      .filter((d, i) => i > data.length / 3 * 2)
-      .attr('transform', 'scale(-1,-1)')
-      .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      .attr('text-anchor', 'end')
+      // .filter((d, i) => i > data.length / 3 * 2)
+      // .attr('transform', 'scale(-1,-1)')
+      // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
+      // .attr('text-anchor', 'end')
           
     arcGroups
       .attr('opacity', 0)
