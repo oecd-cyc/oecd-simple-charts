@@ -111,8 +111,7 @@ class RadialBarChart extends OECDChart {
 
     const that = this;
 
-    const sortKey = sortBy || rows[0];
-    const sortedData = data.sort((a, b) => b[sortKey] - a[sortKey]);
+    const sortedData = sortBy ? data.sort((a, b) => b[sortBy] - a[sortBy]) : data;
     const d3Container = d3Select(container);
 
     const size = d3Container.node().clientWidth;
@@ -121,15 +120,16 @@ class RadialBarChart extends OECDChart {
 
     const svg = d3Container
       .append('svg')
+      .classed('OECDCharts__RadialBarChart', true)
       .classed('oecd-chart__svg', true)
       .attr('width', size)
       .attr('height', size)
       .append('g');
-      
+
     const centeredGroup = svg
       .append('g')
       .attr('transform', `translate(${size / 2}, ${size / 2})`);
-    
+
     const radius = size / 2;
     const chartHeight = radius - innerMargin - innerRadius;
     const arcWidth = chartHeight / rows.length;
@@ -138,7 +138,7 @@ class RadialBarChart extends OECDChart {
     const getStartAngle = (d, i) => i * step;
     const getEndAngle = (d, i) => i * step + step;
     const getAnimationDelay = (i) => i * (500 / sortedData.length);
-    
+
     const arcGenerator = d3Arc()
       .innerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius)
       .outerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius + arcWidth)
@@ -189,7 +189,7 @@ class RadialBarChart extends OECDChart {
         d3Select(this)
           .attr('stroke-width', hoverStrokeWidth)
           .attr('stroke', hoverStrokeColor);
-        
+
         that.event.emit('mouseenter', d);
       })
       .on('mouseleave', function(d) {
@@ -222,38 +222,38 @@ class RadialBarChart extends OECDChart {
       // .attr('transform', 'scale(-1,-1)')
       // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
       // .attr('text-anchor', 'end')
-          
+
     arcGroups
       .attr('opacity', 0)
       .transition()
       .duration(0)
       .delay((d, i) => getAnimationDelay(i))
       .attr('opacity', 1);
-    
+
     const legendGroup = svg.append('g')
       .classed('legend-group', true)
       .attr('transform', `translate(0, ${innerMargin})`);
-    
+
     const legendRows = legendGroup.selectAll('.legend-row')
       .data(rowLabels)
       .enter()
       .append('g')
       .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
       .classed('legend-row', true)
-      
+
     const svgRowLabels = legendRows.append('text')
       .text(d => d)
       .classed('row-label', true);
-    
+
     const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
     const remainingSpace = radius - longestLabel - 30;
-    
+
     svgRowLabels
       .attr('x', ~~longestLabel + 10)
       .attr('y', arcWidth / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle');
-    
+
     const legendColorGroups = legendRows
       .append('g')
       .attr('transform', `translate(${~~longestLabel + 20}, 0)`)
@@ -262,7 +262,7 @@ class RadialBarChart extends OECDChart {
         this.event.emit('sort', this.options.sortBy);
         this.render();
       });
-    
+
     const colorBlockWidth = remainingSpace / colorSteps;
 
     const blockHeight = Math.min(arcWidth, 30);
@@ -279,7 +279,7 @@ class RadialBarChart extends OECDChart {
       .attr('width', colorBlockWidth)
       .attr('height', blockHeight)
       .attr('fill', (d, i) => d)
-    
+
     this.arcGroups = arcGroups;
   }
 
