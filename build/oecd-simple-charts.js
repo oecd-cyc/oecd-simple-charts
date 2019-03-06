@@ -1507,17 +1507,16 @@ var RadialBarChart = function (_OECDChart) {
 
       var that = this;
 
-      var sortKey = sortBy || rows[0];
-      var sortedData = data.sort(function (a, b) {
-        return b[sortKey] - a[sortKey];
-      });
+      var sortedData = sortBy ? data.sort(function (a, b) {
+        return b[sortBy] - a[sortBy];
+      }) : data;
       var d3Container = d3Selection.select(container);
 
       var size = d3Container.node().clientWidth;
 
       d3Container.selectAll('.oecd-chart__svg').remove();
 
-      var svg = d3Container.append('svg').classed('oecd-chart__svg', true).attr('width', size).attr('height', size).append('g');
+      var svg = d3Container.append('svg').classed('OECDCharts__RadialBarChart', true).classed('oecd-chart__svg', true).attr('width', size).attr('height', size).append('g');
 
       var centeredGroup = svg.append('g').attr('transform', 'translate(' + size / 2 + ', ' + size / 2 + ')');
 
