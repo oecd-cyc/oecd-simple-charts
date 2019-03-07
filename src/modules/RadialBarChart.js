@@ -86,6 +86,8 @@ class RadialBarChart extends OECDChart {
       hoverOpacity: 0.5
     };
 
+    this.activeRow = null;
+
     this.init(options);
   }
 
@@ -240,6 +242,17 @@ class RadialBarChart extends OECDChart {
       .append('g')
       .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
       .classed('legend-row', true)
+      .classed('is-active', (d, i) => i === this.activeRow)
+      .on('click', (d, i, nodes, ol) => {
+        this.activeRow = i;
+        this.options.sortBy = rows[i];
+        this.event.emit('sort', this.options.sortBy);
+        this.render();
+
+        if (this.options.legendClickCallback) {
+          this.options.legendClickCallback(this.options.sortBy);
+        }
+      });
 
     const svgRowLabels = legendRows.append('text')
       .text(d => d)
@@ -257,15 +270,9 @@ class RadialBarChart extends OECDChart {
     const legendColorGroups = legendRows
       .append('g')
       .classed('legend-color-blocks', true)
-      .attr('transform', `translate(${~~longestLabel + 20}, 0)`)
-      .on('click', (d, i) => {
-        this.options.sortBy = rows[i];
-        this.event.emit('sort', this.options.sortBy);
-        this.render();
-      });
+      .attr('transform', `translate(${~~longestLabel + 20}, 0)`);
 
     const colorBlockWidth = remainingSpace / colorSteps;
-
     const blockHeight = Math.min(arcWidth, 30);
     const blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 

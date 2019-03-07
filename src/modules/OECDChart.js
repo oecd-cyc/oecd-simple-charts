@@ -1,12 +1,11 @@
 import { select as d3Select } from 'd3-selection';
 import _debounce from 'lodash-es/debounce';
-import eventstop from 'eventstop';
-
+import mitt from 'mitt';
 class OECDChart {
   constructor() {
     this.baseDefaultOptions = {};
 
-    this.event = eventstop();
+    this.event = mitt();
     this.on = this.event.on;
     this.once = this.event.once;
     this.off = this.event.off;

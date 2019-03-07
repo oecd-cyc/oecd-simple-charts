@@ -168,7 +168,10 @@
       rowLabels: ['Political Label', 'Societal Label', 'Economic Label', 'Environmental Label', 'Security Label'],
       rowColors: ['#492242', '#026c6d', '#9d461d', '#4b6d27', '#eaae15'],
       columns: 'country',
-      data: RadialChartData
+      data: RadialChartData,
+      legendClickCallback: function(sortBy) {
+        alert(sortBy);
+      }
     });
 
     document.getElementById('RadialChartUpdate').addEventListener('click', () => {

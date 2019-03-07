@@ -84,7 +84,6 @@ const moduleBundle = {
     format: 'es',
     sourcemap: true
   }],
-  external: isProd ? Object.keys(pkg.dependencies) : [],
   plugins
 };
 
