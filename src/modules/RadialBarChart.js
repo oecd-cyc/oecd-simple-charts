@@ -256,6 +256,7 @@ class RadialBarChart extends OECDChart {
 
     const legendColorGroups = legendRows
       .append('g')
+      .classed('legend-color-blocks', true)
       .attr('transform', `translate(${~~longestLabel + 20}, 0)`)
       .on('click', (d, i) => {
         this.options.sortBy = rows[i];
@@ -279,6 +280,29 @@ class RadialBarChart extends OECDChart {
       .attr('width', colorBlockWidth)
       .attr('height', blockHeight)
       .attr('fill', (d, i) => d)
+
+    legendColorGroups
+      .filter((d,i) => i === 0)
+      .append('text')
+      .classed('legend-label', true)
+      .text('Fragility')
+
+    const lastGroup = legendColorGroups
+      .filter((d, i) => i === legendColorGroups.size() - 1)
+
+    lastGroup
+      .append('text')
+      .classed('legend-label', true)
+      .attr('y', blockHeight * 2)
+      .text('Severe')
+
+    lastGroup
+      .append('text')
+      .classed('legend-label', true)
+      .attr('text-anchor', 'right')
+      .attr('y', blockHeight * 2)
+      .attr('x', colorBlockWidth * (colorData.length - 1))
+      .text('Minor')
 
     this.arcGroups = arcGroups;
   }

@@ -1620,7 +1620,7 @@ var RadialBarChart = function (_OECDChart) {
 
       svgRowLabels.attr('x', ~~longestLabel + 10).attr('y', arcWidth / 2).attr('text-anchor', 'end').attr('alignment-baseline', 'middle');
 
-      var legendColorGroups = legendRows.append('g').attr('transform', 'translate(' + (~~longestLabel + 20) + ', 0)').on('click', function (d, i) {
+      var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + (~~longestLabel + 20) + ', 0)').on('click', function (d, i) {
         _this2.options.sortBy = rows[i];
         _this2.event.emit('sort', _this2.options.sortBy);
         _this2.render();
@@ -1638,6 +1638,18 @@ var RadialBarChart = function (_OECDChart) {
       }).attr('y', blockOffset).attr('width', colorBlockWidth).attr('height', blockHeight).attr('fill', function (d, i) {
         return d;
       });
+
+      legendColorGroups.filter(function (d, i) {
+        return i === 0;
+      }).append('text').classed('legend-label', true).text('Fragility');
+
+      var lastGroup = legendColorGroups.filter(function (d, i) {
+        return i === legendColorGroups.size() - 1;
+      });
+
+      lastGroup.append('text').classed('legend-label', true).attr('y', blockHeight * 2).text('Severe');
+
+      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'right').attr('y', blockHeight * 2).attr('x', colorBlockWidth * (colorData.length - 1)).text('Minor');
 
       this.arcGroups = arcGroups;
     }
