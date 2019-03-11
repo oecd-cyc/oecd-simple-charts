@@ -169,10 +169,11 @@
       rowColors: ['#492242', '#026c6d', '#9d461d', '#4b6d27', '#eaae15'],
       columns: 'country',
       data: RadialChartData,
-      legendClickCallback: function(sortBy) {
-        alert(sortBy);
-      }
     });
+
+    RadialBarChartExample.on('mouseenter', d => console.log(d));
+    RadialBarChartExample.on('mouseleave', d => console.log(d));
+    RadialBarChartExample.on('sort', d => alert(d));
 
     document.getElementById('RadialChartUpdate').addEventListener('click', () => {
       RadialBarChartExample.update({

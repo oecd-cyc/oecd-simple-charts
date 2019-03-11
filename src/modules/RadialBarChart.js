@@ -83,7 +83,10 @@ class RadialBarChart extends OECDChart {
       strokeWidth: 0.5,
       hoverStrokeColor: '#111',
       hoverStrokeWidth: 2,
-      hoverOpacity: 0.5
+      hoverOpacity: 0.5,
+      legendLabelTop: 'Fragility',
+      legendLabelLeft: 'Severe',
+      legendLabelRight: 'Minor'
     };
 
     this.activeRow = null;
@@ -133,7 +136,8 @@ class RadialBarChart extends OECDChart {
       .attr('transform', `translate(${size / 2}, ${size / 2})`);
 
     const radius = size / 2;
-    const chartHeight = radius - innerMargin - innerRadius;
+    const innerHeight = radius - innerMargin;
+    const chartHeight = innerHeight - innerRadius;
     const arcWidth = chartHeight / rows.length;
     const step = (Math.PI * 1.5) / sortedData.length;
 
@@ -164,7 +168,7 @@ class RadialBarChart extends OECDChart {
       .on('mouseenter', this.handleGroupMouseEnter(this))
       .on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
-    arcGroups
+    const arcPaths = arcGroups
       .append('g')
       .classed('arc-container', true)
       .selectAll('.arc')
@@ -177,7 +181,8 @@ class RadialBarChart extends OECDChart {
           endAngle: getEndAngle(d, i),
           color: colorData[rowIndex](value),
           index: i,
-          parentData: d
+          parentData: d,
+          rowIndex
         }
       }))
       .enter()
@@ -187,43 +192,72 @@ class RadialBarChart extends OECDChart {
       .attr('stroke', strokeColor)
       .attr('stroke-width', strokeWidth)
       .on('mouseenter', function(d) {
-        this.parentNode.appendChild(this);
-        d3Select(this)
-          .attr('stroke-width', hoverStrokeWidth)
-          .attr('stroke', hoverStrokeColor);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
 
-        that.event.emit('mouseenter', d);
+        that.event.emit('mouseenter', d.parentData);
       })
       .on('mouseleave', function(d) {
-        d3Select(this)
-          .attr('stroke-width', 1)
-          .attr('stroke', strokeColor);
+        // d3Select(this)
+        //   .attr('stroke-width', 1)
+        //   .attr('stroke', strokeColor);
 
-        that.event.emit('mouseleave', d);
+        that.event.emit('mouseleave', d.parentData);
       })
       .on('click', function(d) {
-        this.parentNode.appendChild(this);
-        d3Select(this)
-          .attr('stroke-width', hoverStrokeWidth)
-          .attr('stroke', hoverStrokeColor);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
 
-        that.event.emit('click', d);
+        that.event.emit('click', d.parentData);
       });
 
-    arcGroups
-      .append('g')
-      .classed('label-container', true)
-      .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
-      .append('text')
-      .classed('column-label', true)
-      .attr('x', radius - innerMargin + labelOffset)
-      .attr('y', 0)
-      .attr('dominant-baseline', 'middle')
-      .text((d, i) => d[columns])
-      // .filter((d, i) => i > data.length / 3 * 2)
-      // .attr('transform', 'scale(-1,-1)')
-      // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      // .attr('text-anchor', 'end')
+      arcGroups
+        .append('g')
+        .attr('transform', (d, i) => {
+          const angle = i * step + (step / 2) - Math.PI / 2;
+          const x = innerHeight * Math.cos(angle);
+          const y = innerHeight * Math.sin(angle);
+          return `translate(${x}, ${y})`;
+        })
+        .append('text')
+        .text((d, i) => d[columns])
+        .attr('transform', (d, i) => {
+          const angle = i * step + (step / 2) - Math.PI / 2;
+          const rotation = angle > Math.PI / 2 ? rad2deg(angle + Math.PI) : rad2deg(angle);
+          return `rotate(${rotation})`;
+        })
+        .filter((d, i) => i * step + (step / 2) - Math.PI / 2 > Math.PI / 2)
+        .attr('text-anchor', 'end');
+ //       .attr('x', radius - innerMargin + labelOffset)
+//        .attr('transform-origin',  + ' 0')
+      
+      // .each((d, i) => {
+      //   console.log(getEndAngle(d, i));
+      // });
+
+    // const arcGroupLabelContainers = arcGroups
+    //   .append('g')
+    //   .classed('label-container', true)
+    //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
+      
+    // arcGroupLabelContainers
+    //   .filter((d, i) => i > data.length / 3 * 2)
+    //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
+    //   // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
+    //   .attr('text-anchor', 'end')
+
+    // arcGroupLabelContainers
+    //   .append('text')
+    //   .classed('column-label', true)
+    //   .attr('x', radius - innerMargin + labelOffset)
+    //   .attr('y', 0)
+    //   .attr('dominant-baseline', 'middle')
+    //   .text((d, i) => d[columns])
+
 
     arcGroups
       .attr('opacity', 0)
@@ -240,7 +274,7 @@ class RadialBarChart extends OECDChart {
       .data(rowLabels)
       .enter()
       .append('g')
-      .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
+      .attr('transform', (d, i) => `translate(50, ${arcWidth * i})`)
       .classed('legend-row', true)
       .classed('is-active', (d, i) => i === this.activeRow)
       .on('click', (d, i, nodes, ol) => {
@@ -248,24 +282,22 @@ class RadialBarChart extends OECDChart {
         this.options.sortBy = rows[i];
         this.event.emit('sort', this.options.sortBy);
         this.render();
-
-        if (this.options.legendClickCallback) {
-          this.options.legendClickCallback(this.options.sortBy);
-        }
       });
 
     const svgRowLabels = legendRows.append('text')
+      .append('tspan')
       .text(d => d)
       .classed('row-label', true);
 
     const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
-    const remainingSpace = radius - longestLabel - 30;
+    const remainingSpace = radius - longestLabel - 80;
 
     svgRowLabels
       .attr('x', ~~longestLabel + 10)
       .attr('y', arcWidth / 2)
       .attr('text-anchor', 'end')
-      .attr('alignment-baseline', 'middle');
+      .attr('alignment-baseline', 'middle')
+      .attr('dominant-baseline', 'middle');
 
     const legendColorGroups = legendRows
       .append('g')
@@ -292,7 +324,9 @@ class RadialBarChart extends OECDChart {
       .filter((d,i) => i === 0)
       .append('text')
       .classed('legend-label', true)
-      .text('Fragility')
+      .attr('x', 0)
+      .attr('y', -12)
+      .text(this.options.legendLabelTop);
 
     const lastGroup = legendColorGroups
       .filter((d, i) => i === legendColorGroups.size() - 1)
@@ -301,15 +335,15 @@ class RadialBarChart extends OECDChart {
       .append('text')
       .classed('legend-label', true)
       .attr('y', blockHeight * 2)
-      .text('Severe')
+      .text(this.options.legendLabelLeft);
 
     lastGroup
       .append('text')
       .classed('legend-label', true)
-      .attr('text-anchor', 'right')
+      .attr('text-anchor', 'end')
       .attr('y', blockHeight * 2)
-      .attr('x', colorBlockWidth * (colorData.length - 1))
-      .text('Minor')
+      .attr('x', colorBlockWidth * colorData.length)
+      .text(this.options.legendLabelRight);
 
     this.arcGroups = arcGroups;
   }

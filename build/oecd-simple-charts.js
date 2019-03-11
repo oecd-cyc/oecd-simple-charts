@@ -8646,7 +8646,10 @@ var RadialBarChart = function (_OECDChart) {
       strokeWidth: 0.5,
       hoverStrokeColor: '#111',
       hoverStrokeWidth: 2,
-      hoverOpacity: 0.5
+      hoverOpacity: 0.5,
+      legendLabelTop: 'Fragility',
+      legendLabelLeft: 'Severe',
+      legendLabelRight: 'Minor'
     };
 
     _this.activeRow = null;
@@ -8695,7 +8698,8 @@ var RadialBarChart = function (_OECDChart) {
       var centeredGroup = svg.append('g').attr('transform', 'translate(' + size / 2 + ', ' + size / 2 + ')');
 
       var radius = size / 2;
-      var chartHeight = radius - innerMargin - innerRadius;
+      var innerHeight = radius - innerMargin;
+      var chartHeight = innerHeight - innerRadius;
       var arcWidth = chartHeight / rows.length;
       var step$$1 = Math.PI * 1.5 / sortedData.length;
 
@@ -8731,7 +8735,7 @@ var RadialBarChart = function (_OECDChart) {
 
       var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
-      arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
+      var arcPaths = arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
         return rows.map(function (row, rowIndex) {
           var value = +d[row];
 
@@ -8741,36 +8745,74 @@ var RadialBarChart = function (_OECDChart) {
             endAngle: getEndAngle(d, i),
             color: colorData[rowIndex](value),
             index: i,
-            parentData: d
+            parentData: d,
+            rowIndex: rowIndex
           };
         });
       }).enter().append('path').attr('d', arcGenerator).attr('fill', function (d) {
         return d.color;
       }).attr('stroke', strokeColor).attr('stroke-width', strokeWidth).on('mouseenter', function (d) {
-        this.parentNode.appendChild(this);
-        d3Select(this).attr('stroke-width', hoverStrokeWidth).attr('stroke', hoverStrokeColor);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
 
-        that.event.emit('mouseenter', d);
+        that.event.emit('mouseenter', d.parentData);
       }).on('mouseleave', function (d) {
-        d3Select(this).attr('stroke-width', 1).attr('stroke', strokeColor);
+        // d3Select(this)
+        //   .attr('stroke-width', 1)
+        //   .attr('stroke', strokeColor);
 
-        that.event.emit('mouseleave', d);
+        that.event.emit('mouseleave', d.parentData);
       }).on('click', function (d) {
-        this.parentNode.appendChild(this);
-        d3Select(this).attr('stroke-width', hoverStrokeWidth).attr('stroke', hoverStrokeColor);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
 
-        that.event.emit('click', d);
+        that.event.emit('click', d.parentData);
       });
 
-      arcGroups.append('g').classed('label-container', true).attr('transform', function (d, i) {
-        return 'rotate(' + (rad2deg$1(i * step$$1 + step$$1 / 2) - 90) + ')';
-      }).append('text').classed('column-label', true).attr('x', radius - innerMargin + labelOffset).attr('y', 0).attr('dominant-baseline', 'middle').text(function (d, i) {
+      arcGroups.append('g').attr('transform', function (d, i) {
+        var angle = i * step$$1 + step$$1 / 2 - Math.PI / 2;
+        var x = innerHeight * Math.cos(angle);
+        var y = innerHeight * Math.sin(angle);
+        return 'translate(' + x + ', ' + y + ')';
+      }).append('text').text(function (d, i) {
         return d[columns];
-      });
-      // .filter((d, i) => i > data.length / 3 * 2)
-      // .attr('transform', 'scale(-1,-1)')
-      // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      // .attr('text-anchor', 'end')
+      }).attr('transform', function (d, i) {
+        var angle = i * step$$1 + step$$1 / 2 - Math.PI / 2;
+        var rotation = angle > Math.PI / 2 ? rad2deg$1(angle + Math.PI) : rad2deg$1(angle);
+        return 'rotate(' + rotation + ')';
+      }).filter(function (d, i) {
+        return i * step$$1 + step$$1 / 2 - Math.PI / 2 > Math.PI / 2;
+      }).attr('text-anchor', 'end');
+      //       .attr('x', radius - innerMargin + labelOffset)
+      //        .attr('transform-origin',  + ' 0')
+
+      // .each((d, i) => {
+      //   console.log(getEndAngle(d, i));
+      // });
+
+      // const arcGroupLabelContainers = arcGroups
+      //   .append('g')
+      //   .classed('label-container', true)
+      //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
+
+      // arcGroupLabelContainers
+      //   .filter((d, i) => i > data.length / 3 * 2)
+      //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
+      //   // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
+      //   .attr('text-anchor', 'end')
+
+      // arcGroupLabelContainers
+      //   .append('text')
+      //   .classed('column-label', true)
+      //   .attr('x', radius - innerMargin + labelOffset)
+      //   .attr('y', 0)
+      //   .attr('dominant-baseline', 'middle')
+      //   .text((d, i) => d[columns])
+
 
       arcGroups.attr('opacity', 0).transition().duration(0).delay(function (d, i) {
         return getAnimationDelay(i);
@@ -8779,7 +8821,7 @@ var RadialBarChart = function (_OECDChart) {
       var legendGroup = svg.append('g').classed('legend-group', true).attr('transform', 'translate(0, ' + innerMargin + ')');
 
       var legendRows = legendGroup.selectAll('.legend-row').data(rowLabels).enter().append('g').attr('transform', function (d, i) {
-        return 'translate(0, ' + arcWidth * i + ')';
+        return 'translate(50, ' + arcWidth * i + ')';
       }).classed('legend-row', true).classed('is-active', function (d, i) {
         return i === _this2.activeRow;
       }).on('click', function (d, i, nodes, ol) {
@@ -8787,22 +8829,18 @@ var RadialBarChart = function (_OECDChart) {
         _this2.options.sortBy = rows[i];
         _this2.event.emit('sort', _this2.options.sortBy);
         _this2.render();
-
-        if (_this2.options.legendClickCallback) {
-          _this2.options.legendClickCallback(_this2.options.sortBy);
-        }
       });
 
-      var svgRowLabels = legendRows.append('text').text(function (d) {
+      var svgRowLabels = legendRows.append('text').append('tspan').text(function (d) {
         return d;
       }).classed('row-label', true);
 
       var longestLabel = d3Max(svgRowLabels.nodes(), function (label) {
         return label.getBoundingClientRect().width;
       });
-      var remainingSpace = radius - longestLabel - 30;
+      var remainingSpace = radius - longestLabel - 80;
 
-      svgRowLabels.attr('x', ~~longestLabel + 10).attr('y', arcWidth / 2).attr('text-anchor', 'end').attr('alignment-baseline', 'middle');
+      svgRowLabels.attr('x', ~~longestLabel + 10).attr('y', arcWidth / 2).attr('text-anchor', 'end').attr('alignment-baseline', 'middle').attr('dominant-baseline', 'middle');
 
       var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + (~~longestLabel + 20) + ', 0)');
 
@@ -8820,15 +8858,15 @@ var RadialBarChart = function (_OECDChart) {
 
       legendColorGroups.filter(function (d, i) {
         return i === 0;
-      }).append('text').classed('legend-label', true).text('Fragility');
+      }).append('text').classed('legend-label', true).attr('x', 0).attr('y', -12).text(this.options.legendLabelTop);
 
       var lastGroup = legendColorGroups.filter(function (d, i) {
         return i === legendColorGroups.size() - 1;
       });
 
-      lastGroup.append('text').classed('legend-label', true).attr('y', blockHeight * 2).text('Severe');
+      lastGroup.append('text').classed('legend-label', true).attr('y', blockHeight * 2).text(this.options.legendLabelLeft);
 
-      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'right').attr('y', blockHeight * 2).attr('x', colorBlockWidth * (colorData.length - 1)).text('Minor');
+      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('y', blockHeight * 2).attr('x', colorBlockWidth * colorData.length).text(this.options.legendLabelRight);
 
       this.arcGroups = arcGroups;
     }
