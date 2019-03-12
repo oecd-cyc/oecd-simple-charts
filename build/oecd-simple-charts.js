@@ -5378,9 +5378,13 @@ var PearlChart = function (_OECDChart) {
       colorLabels: false,
       callback: null,
       showTicks: true,
+      labelAccessor: function labelAccessor(data) {
+        return d.value;
+      },
       labelFormat: function labelFormat(val) {
-        return Math.round(val * 10) / 10;
-      }
+        return val;
+      },
+      labelPlacement: 'top'
     };
 
     _this.init(options);
@@ -5397,7 +5401,8 @@ var PearlChart = function (_OECDChart) {
           extent = _options.extent,
           marginLeft = _options.marginLeft,
           marginRight = _options.marginRight,
-          labelOffset = _options.labelOffset;
+          labelOffset = _options.labelOffset,
+          labelPlacement = _options.labelPlacement;
 
 
       var d3Container = d3Select(container);
@@ -5444,11 +5449,12 @@ var PearlChart = function (_OECDChart) {
       var _options2 = this.options,
           labelOffset = _options2.labelOffset,
           radius = _options2.radius,
-          height = _options2.height;
+          height = _options2.height,
+          labelPlacement = _options2.labelPlacement;
 
       var innerHeight = height + labelOffset;
 
-      this.getCircles(data, innerHeight, radius, transitionFunc, labelOffset);
+      this.getCircles(data, innerHeight, radius, transitionFunc, labelOffset, labelPlacement);
     }
   }, {
     key: 'getAxis',
@@ -5506,7 +5512,7 @@ var PearlChart = function (_OECDChart) {
     }
   }, {
     key: 'getCircles',
-    value: function getCircles(_data, innerHeight, radius, transition$$1, labelOffset) {
+    value: function getCircles(_data, innerHeight, radius, transition$$1, labelOffset, labelPlacement) {
       var _this3 = this;
 
       var circles = this.nodesWrapper.selectAll('.pearlchart__circle-wrapper').data(_data, function (d) {
@@ -5538,16 +5544,18 @@ var PearlChart = function (_OECDChart) {
       if (this.options.showLabels) {
         circle.append('text').classed('pearlchart__circle-label', true).attr('font-size', this.options.fontSize).attr('x', function (d) {
           return _this3.scale(d.value);
-        }).attr('y', innerHeight / 2).attr('dy', -(radius * 2) + labelOffset).text(function (d) {
-          return _this3.options.labelFormat(d.value);
+        }).attr('y', innerHeight / 2).attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset).text(function (d) {
+          var value = _this3.options.labelAccessor(d);
+          return _this3.options.labelFormat(value);
         }).attr('text-anchor', 'middle').style('fill', function (d) {
           return !_this3.options.colorLabels ? '#000' : d.color;
         });
       } else {
         circle.append('text').classed('pearlchart__circle-tooltip', true).attr('font-size', this.options.fontSize).attr('x', function (d) {
           return _this3.scale(d.value);
-        }).attr('y', innerHeight / 2).attr('dy', -(radius * 2) + labelOffset).text(function (d) {
-          return _this3.options.labelFormat(d.value);
+        }).attr('y', innerHeight / 2).attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset).text(function (d) {
+          var value = _this3.options.labelAccessor(d);
+          return _this3.options.labelFormat(value);
         }).attr('text-anchor', 'middle').style('fill', function (d) {
           return !_this3.options.colorLabels ? '#000' : d.color;
         }).style('display', 'none');

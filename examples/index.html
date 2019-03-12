@@ -37,20 +37,26 @@
       renderInfoButton: true,
       showTicks: true,
       showLabels: false,
+      labelPlacement: 'bottom',
       colorLabels: true,
       callback: callbackFunc,
       data: [
         {
           value: 410,
-          color: '#900c3f'
+          color: '#900c3f',
+          exampleLabel: 'Beispiel-Label'
         },
         {
           value: 520,
-          color: '#189aa8'
+          color: '#189aa8',
+          exampleLabel: '520$'
         }
       ],
-      labelFormat: function(val) {
-        return Math.round(val) + '$';
+      // labelFormat: function(val) {
+      //   return Math.round(val) + '$';
+      // },
+      labelAccessor: function(data) {
+        return data.exampleLabel;
       }
     });
 

@@ -83,7 +83,9 @@ class PearlChart extends OECDChart {
       colorLabels: false,
       callback: null,
       showTicks: true,
-      labelFormat: val => Math.round(val * 10) / 10
+      labelAccessor: data => d.value,
+      labelFormat: val => val,
+      labelPlacement: 'top'
     };
 
     this.init(options);
@@ -97,7 +99,8 @@ class PearlChart extends OECDChart {
       extent,
       marginLeft,
       marginRight,
-      labelOffset
+      labelOffset,
+      labelPlacement,
     } = this.options;
 
     const d3Container = d3Select(container);
@@ -149,10 +152,10 @@ class PearlChart extends OECDChart {
     this.options.data = _data;
     const data = PearlChart.parseData(_data);
     const transitionFunc = d3Transition().duration(750);
-    const { labelOffset, radius, height } = this.options;
+    const { labelOffset, radius, height, labelPlacement } = this.options;
     const innerHeight = height + labelOffset;
 
-    this.getCircles(data, innerHeight, radius, transitionFunc, labelOffset);
+    this.getCircles(data, innerHeight, radius, transitionFunc, labelOffset, labelPlacement);
   }
 
   getAxis(options = this.defaultOptions) {
@@ -214,7 +217,7 @@ class PearlChart extends OECDChart {
     axis.selectAll('pearlchart__axis-ticks').style('font-size', (this.options.fontSize * 0.8));
   }
 
-  getCircles(_data, innerHeight, radius, transition, labelOffset) {
+  getCircles(_data, innerHeight, radius, transition, labelOffset, labelPlacement) {
     const circles = this.nodesWrapper.selectAll('.pearlchart__circle-wrapper')
       .data(_data, d => d.value);
 
@@ -253,8 +256,11 @@ class PearlChart extends OECDChart {
         .attr('font-size', this.options.fontSize)
         .attr('x', d => this.scale(d.value))
         .attr('y', (innerHeight / 2))
-        .attr('dy', -(radius * 2) + labelOffset)
-        .text(d => this.options.labelFormat(d.value))
+        .attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset)
+        .text(d => {
+          const value = this.options.labelAccessor(d);
+          return this.options.labelFormat(value);
+        })
         .attr('text-anchor', 'middle')
         .style('fill', d => (!this.options.colorLabels ? '#000' : d.color));
     } else {
@@ -263,8 +269,11 @@ class PearlChart extends OECDChart {
         .attr('font-size', this.options.fontSize)
         .attr('x', d => this.scale(d.value))
         .attr('y', (innerHeight / 2))
-        .attr('dy', -(radius * 2) + labelOffset)
-        .text(d => this.options.labelFormat(d.value))
+        .attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset)
+        .text(d => {
+          const value = this.options.labelAccessor(d);
+          return this.options.labelFormat(value);
+        })
         .attr('text-anchor', 'middle')
         .style('fill', d => (!this.options.colorLabels ? '#000' : d.color))
         .style('display', 'none');
