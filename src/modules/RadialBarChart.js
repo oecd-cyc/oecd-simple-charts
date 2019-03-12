@@ -109,8 +109,6 @@ class RadialBarChart extends OECDChart {
       lightnessFactor,
       strokeColor,
       strokeWidth,
-      hoverStrokeColor,
-      hoverStrokeWidth,
       sortBy,
     } = this.options;
 
@@ -219,8 +217,9 @@ class RadialBarChart extends OECDChart {
         .append('g')
         .attr('transform', (d, i) => {
           const angle = i * step + (step / 2) - Math.PI / 2;
-          const x = innerHeight * Math.cos(angle);
-          const y = innerHeight * Math.sin(angle);
+          const distance = innerHeight + labelOffset;
+          const x = distance * Math.cos(angle);
+          const y = distance * Math.sin(angle);
           return `translate(${x}, ${y})`;
         })
         .append('text')
@@ -230,6 +229,7 @@ class RadialBarChart extends OECDChart {
           const rotation = angle > Math.PI / 2 ? rad2deg(angle + Math.PI) : rad2deg(angle);
           return `rotate(${rotation})`;
         })
+        .attr('dominant-baseline', 'middle')
         .filter((d, i) => i * step + (step / 2) - Math.PI / 2 > Math.PI / 2)
         .attr('text-anchor', 'end');
  //       .attr('x', radius - innerMargin + labelOffset)
@@ -281,20 +281,21 @@ class RadialBarChart extends OECDChart {
         this.activeRow = i;
         this.options.sortBy = rows[i];
         this.event.emit('sort', this.options.sortBy);
-        this.render();
+        this.update(this.options);
       });
 
     const svgRowLabels = legendRows.append('text')
-      .append('tspan')
+      // .append('tspan')
       .text(d => d)
       .classed('row-label', true);
 
     const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
     const remainingSpace = radius - longestLabel - 80;
+    const legendXSpace = ~~longestLabel + 20;
 
     svgRowLabels
       .attr('x', ~~longestLabel + 10)
-      .attr('y', arcWidth / 2)
+      // .attr('y', arcWidth / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
       .attr('dominant-baseline', 'middle');
@@ -302,13 +303,16 @@ class RadialBarChart extends OECDChart {
     const legendColorGroups = legendRows
       .append('g')
       .classed('legend-color-blocks', true)
-      .attr('transform', `translate(${~~longestLabel + 20}, 0)`);
+      .attr('transform', `translate(${legendXSpace}, 0)`);
 
     const colorBlockWidth = remainingSpace / colorSteps;
     const blockHeight = Math.min(arcWidth, 30);
     const blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 
-    const legendColorBlocks = legendColorGroups
+    svgRowLabels
+      .attr('y', blockOffset + blockHeight / 2);
+
+    legendColorGroups
       .selectAll('.color-block')
       .data((d, i) => colorData[i].range().slice(0).reverse())
       .enter()
@@ -320,13 +324,14 @@ class RadialBarChart extends OECDChart {
       .attr('height', blockHeight)
       .attr('fill', (d, i) => d)
 
-    legendColorGroups
-      .filter((d,i) => i === 0)
+      legendGroup
+      // .filter((d,i) => i === 0)
       .append('text')
       .classed('legend-label', true)
-      .attr('x', 0)
-      .attr('y', -12)
-      .text(this.options.legendLabelTop);
+      .attr('x', legendXSpace + 50)
+      .attr('y', blockOffset - 5)
+      .text(this.options.legendLabelTop)
+      .attr('dominant-baseline', 'baseline');
 
     const lastGroup = legendColorGroups
       .filter((d, i) => i === legendColorGroups.size() - 1)
@@ -334,14 +339,16 @@ class RadialBarChart extends OECDChart {
     lastGroup
       .append('text')
       .classed('legend-label', true)
-      .attr('y', blockHeight * 2)
+      .attr('y', blockOffset + blockHeight + 5)
+      .attr('dominant-baseline', 'hanging')
       .text(this.options.legendLabelLeft);
 
     lastGroup
       .append('text')
       .classed('legend-label', true)
       .attr('text-anchor', 'end')
-      .attr('y', blockHeight * 2)
+      .attr('dominant-baseline', 'hanging')
+      .attr('y', blockOffset + blockHeight + 5)
       .attr('x', colorBlockWidth * colorData.length)
       .text(this.options.legendLabelRight);
 

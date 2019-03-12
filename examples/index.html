@@ -173,7 +173,7 @@
 
     RadialBarChartExample.on('mouseenter', d => console.log(d));
     RadialBarChartExample.on('mouseleave', d => console.log(d));
-    RadialBarChartExample.on('sort', d => alert(d));
+    RadialBarChartExample.on('sort', d => console.log(d));
 
     document.getElementById('RadialChartUpdate').addEventListener('click', () => {
       RadialBarChartExample.update({

@@ -8677,8 +8677,6 @@ var RadialBarChart = function (_OECDChart) {
           lightnessFactor = _options.lightnessFactor,
           strokeColor = _options.strokeColor,
           strokeWidth = _options.strokeWidth,
-          hoverStrokeColor = _options.hoverStrokeColor,
-          hoverStrokeWidth = _options.hoverStrokeWidth,
           sortBy = _options.sortBy;
 
 
@@ -8775,8 +8773,9 @@ var RadialBarChart = function (_OECDChart) {
 
       arcGroups.append('g').attr('transform', function (d, i) {
         var angle = i * step$$1 + step$$1 / 2 - Math.PI / 2;
-        var x = innerHeight * Math.cos(angle);
-        var y = innerHeight * Math.sin(angle);
+        var distance = innerHeight + labelOffset;
+        var x = distance * Math.cos(angle);
+        var y = distance * Math.sin(angle);
         return 'translate(' + x + ', ' + y + ')';
       }).append('text').text(function (d, i) {
         return d[columns];
@@ -8784,7 +8783,7 @@ var RadialBarChart = function (_OECDChart) {
         var angle = i * step$$1 + step$$1 / 2 - Math.PI / 2;
         var rotation = angle > Math.PI / 2 ? rad2deg$1(angle + Math.PI) : rad2deg$1(angle);
         return 'rotate(' + rotation + ')';
-      }).filter(function (d, i) {
+      }).attr('dominant-baseline', 'middle').filter(function (d, i) {
         return i * step$$1 + step$$1 / 2 - Math.PI / 2 > Math.PI / 2;
       }).attr('text-anchor', 'end');
       //       .attr('x', radius - innerMargin + labelOffset)
@@ -8828,10 +8827,12 @@ var RadialBarChart = function (_OECDChart) {
         _this2.activeRow = i;
         _this2.options.sortBy = rows[i];
         _this2.event.emit('sort', _this2.options.sortBy);
-        _this2.render();
+        _this2.update(_this2.options);
       });
 
-      var svgRowLabels = legendRows.append('text').append('tspan').text(function (d) {
+      var svgRowLabels = legendRows.append('text')
+      // .append('tspan')
+      .text(function (d) {
         return d;
       }).classed('row-label', true);
 
@@ -8839,16 +8840,21 @@ var RadialBarChart = function (_OECDChart) {
         return label.getBoundingClientRect().width;
       });
       var remainingSpace = radius - longestLabel - 80;
+      var legendXSpace = ~~longestLabel + 20;
 
-      svgRowLabels.attr('x', ~~longestLabel + 10).attr('y', arcWidth / 2).attr('text-anchor', 'end').attr('alignment-baseline', 'middle').attr('dominant-baseline', 'middle');
+      svgRowLabels.attr('x', ~~longestLabel + 10)
+      // .attr('y', arcWidth / 2)
+      .attr('text-anchor', 'end').attr('alignment-baseline', 'middle').attr('dominant-baseline', 'middle');
 
-      var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + (~~longestLabel + 20) + ', 0)');
+      var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + legendXSpace + ', 0)');
 
       var colorBlockWidth = remainingSpace / colorSteps;
       var blockHeight = Math.min(arcWidth, 30);
       var blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 
-      var legendColorBlocks = legendColorGroups.selectAll('.color-block').data(function (d, i) {
+      svgRowLabels.attr('y', blockOffset + blockHeight / 2);
+
+      legendColorGroups.selectAll('.color-block').data(function (d, i) {
         return colorData[i].range().slice(0).reverse();
       }).enter().append('rect').classed('color-block', true).attr('x', function (d, i) {
         return i * colorBlockWidth;
@@ -8856,17 +8862,17 @@ var RadialBarChart = function (_OECDChart) {
         return d;
       });
 
-      legendColorGroups.filter(function (d, i) {
-        return i === 0;
-      }).append('text').classed('legend-label', true).attr('x', 0).attr('y', -12).text(this.options.legendLabelTop);
+      legendGroup
+      // .filter((d,i) => i === 0)
+      .append('text').classed('legend-label', true).attr('x', legendXSpace + 50).attr('y', blockOffset - 5).text(this.options.legendLabelTop).attr('dominant-baseline', 'baseline');
 
       var lastGroup = legendColorGroups.filter(function (d, i) {
         return i === legendColorGroups.size() - 1;
       });
 
-      lastGroup.append('text').classed('legend-label', true).attr('y', blockHeight * 2).text(this.options.legendLabelLeft);
+      lastGroup.append('text').classed('legend-label', true).attr('y', blockOffset + blockHeight + 5).attr('dominant-baseline', 'hanging').text(this.options.legendLabelLeft);
 
-      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('y', blockHeight * 2).attr('x', colorBlockWidth * colorData.length).text(this.options.legendLabelRight);
+      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('dominant-baseline', 'hanging').attr('y', blockOffset + blockHeight + 5).attr('x', colorBlockWidth * colorData.length).text(this.options.legendLabelRight);
 
       this.arcGroups = arcGroups;
     }
