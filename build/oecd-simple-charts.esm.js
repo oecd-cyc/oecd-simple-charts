@@ -8829,6 +8829,12 @@ var RadialBarChart = function (_OECDChart) {
         _this2.options.sortBy = rows[i];
         _this2.event.emit('sort', _this2.options.sortBy);
         _this2.update(_this2.options);
+      }).on('mouseenter', function (d, i, nodes, ol) {
+        legendGroup.selectAll('.legend-row').filter(function (d, index) {
+          return index !== i;
+        }).attr('opacity', 0.6);
+      }).on('mouseleave', function (d, i, nodes, ol) {
+        legendGroup.selectAll('.legend-row').attr('opacity', 1);
       });
 
       var svgRowLabels = legendRows.append('text')

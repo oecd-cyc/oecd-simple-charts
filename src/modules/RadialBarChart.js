@@ -234,7 +234,7 @@ class RadialBarChart extends OECDChart {
         .attr('text-anchor', 'end');
  //       .attr('x', radius - innerMargin + labelOffset)
 //        .attr('transform-origin',  + ' 0')
-      
+
       // .each((d, i) => {
       //   console.log(getEndAngle(d, i));
       // });
@@ -243,7 +243,7 @@ class RadialBarChart extends OECDChart {
     //   .append('g')
     //   .classed('label-container', true)
     //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
-      
+
     // arcGroupLabelContainers
     //   .filter((d, i) => i > data.length / 3 * 2)
     //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
@@ -282,6 +282,17 @@ class RadialBarChart extends OECDChart {
         this.options.sortBy = rows[i];
         this.event.emit('sort', this.options.sortBy);
         this.update(this.options);
+      })
+      .on('mouseenter', (d, i, nodes, ol) => {
+        legendGroup
+          .selectAll('.legend-row')
+          .filter((d, index) => index !== i)
+          .attr('opacity', 0.6);
+      })
+      .on('mouseleave', (d, i, nodes, ol) => {
+        legendGroup
+          .selectAll('.legend-row')
+          .attr('opacity', 1);
       });
 
     const svgRowLabels = legendRows.append('text')
