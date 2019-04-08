@@ -122,8 +122,13 @@ class RadialBarChart extends OECDChart {
       strokeWidth: 0.5,
       hoverStrokeColor: '#111',
       hoverStrokeWidth: 2,
-      hoverOpacity: 0.5
+      hoverOpacity: 0.5,
+      legendLabelTop: 'Fragility',
+      legendLabelLeft: 'Severe',
+      legendLabelRight: 'Minor'
     };
+
+    this.activeRow = null;
 
     this.init(options);
   }
@@ -143,15 +148,12 @@ class RadialBarChart extends OECDChart {
       lightnessFactor,
       strokeColor,
       strokeWidth,
-      hoverStrokeColor,
-      hoverStrokeWidth,
       sortBy,
     } = this.options;
 
     const that = this;
 
-    const sortKey = sortBy || rows[0];
-    const sortedData = data.sort((a, b) => b[sortKey] - a[sortKey]);
+    const sortedData = sortBy ? data.sort((a, b) => b[sortBy] - a[sortBy]) : data;
     const d3Container = d3Select(container);
 
     const size = d3Container.node().clientWidth;
@@ -160,24 +162,26 @@ class RadialBarChart extends OECDChart {
 
     const svg = d3Container
       .append('svg')
+      .classed('OECDCharts__RadialBarChart', true)
       .classed('oecd-chart__svg', true)
       .attr('width', size)
       .attr('height', size)
       .append('g');
-      
+
     const centeredGroup = svg
       .append('g')
       .attr('transform', `translate(${size / 2}, ${size / 2})`);
-    
+
     const radius = size / 2;
-    const chartHeight = radius - innerMargin - innerRadius;
+    const innerHeight = radius - innerMargin;
+    const chartHeight = innerHeight - innerRadius;
     const arcWidth = chartHeight / rows.length;
     const step = (Math.PI * 1.5) / sortedData.length;
 
     const getStartAngle = (d, i) => i * step;
     const getEndAngle = (d, i) => i * step + step;
     const getAnimationDelay = (i) => i * (500 / sortedData.length);
-    
+
     const arcGenerator = d3Arc()
       .innerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius)
       .outerRadius((d, i) => (rows.length - i - 1) * arcWidth + innerRadius + arcWidth)
@@ -201,7 +205,7 @@ class RadialBarChart extends OECDChart {
       .on('mouseenter', this.handleGroupMouseEnter(this))
       .on('mouseleave', this.handleGroupMouseLeave.bind(this));
 
-    arcGroups
+    const arcPaths = arcGroups
       .append('g')
       .classed('arc-container', true)
       .selectAll('.arc')
@@ -214,7 +218,8 @@ class RadialBarChart extends OECDChart {
           endAngle: getEndAngle(d, i),
           color: colorData[rowIndex](value),
           index: i,
-          parentData: d
+          parentData: d,
+          rowIndex
         }
       }))
       .enter()
@@ -224,90 +229,129 @@ class RadialBarChart extends OECDChart {
       .attr('stroke', strokeColor)
       .attr('stroke-width', strokeWidth)
       .on('mouseenter', function(d) {
-        this.parentNode.appendChild(this);
-        d3Select(this)
-          .attr('stroke-width', hoverStrokeWidth)
-          .attr('stroke', hoverStrokeColor);
-        
-        that.event.emit('mouseenter', d);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
+
+        that.event.emit('mouseenter', d.parentData);
       })
       .on('mouseleave', function(d) {
-        d3Select(this)
-          .attr('stroke-width', 1)
-          .attr('stroke', strokeColor);
+        // d3Select(this)
+        //   .attr('stroke-width', 1)
+        //   .attr('stroke', strokeColor);
 
-        that.event.emit('mouseleave', d);
+        that.event.emit('mouseleave', d.parentData);
       })
       .on('click', function(d) {
-        this.parentNode.appendChild(this);
-        d3Select(this)
-          .attr('stroke-width', hoverStrokeWidth)
-          .attr('stroke', hoverStrokeColor);
+        // this.parentNode.appendChild(this);
+        // d3Select(this)
+        //   .attr('stroke-width', hoverStrokeWidth)
+        //   .attr('stroke', hoverStrokeColor);
 
-        that.event.emit('click', d);
+        that.event.emit('click', d.parentData);
       });
 
-    arcGroups
-      .append('g')
-      .classed('label-container', true)
-      .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
-      .append('text')
-      .classed('column-label', true)
-      .attr('x', radius - innerMargin + labelOffset)
-      .attr('y', 0)
-      .attr('dominant-baseline', 'middle')
-      .text((d, i) => d[columns])
-      .filter((d, i) => i > data.length / 3 * 2)
-      .attr('transform', 'scale(-1,-1)')
-      .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      .attr('text-anchor', 'end')
-          
+      arcGroups
+        .append('g')
+        .attr('transform', (d, i) => {
+          const angle = i * step + (step / 2) - Math.PI / 2;
+          const distance = innerHeight + labelOffset;
+          const x = distance * Math.cos(angle);
+          const y = distance * Math.sin(angle);
+          return `translate(${x}, ${y})`;
+        })
+        .append('text')
+        .text((d, i) => d[columns])
+        .attr('transform', (d, i) => {
+          const angle = i * step + (step / 2) - Math.PI / 2;
+          const rotation = angle > Math.PI / 2 ? rad2deg(angle + Math.PI) : rad2deg(angle);
+          return `rotate(${rotation})`;
+        })
+        .attr('dominant-baseline', 'middle')
+        .filter((d, i) => i * step + (step / 2) - Math.PI / 2 > Math.PI / 2)
+        .attr('text-anchor', 'end');
+ //       .attr('x', radius - innerMargin + labelOffset)
+//        .attr('transform-origin',  + ' 0')
+      
+      // .each((d, i) => {
+      //   console.log(getEndAngle(d, i));
+      // });
+
+    // const arcGroupLabelContainers = arcGroups
+    //   .append('g')
+    //   .classed('label-container', true)
+    //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
+      
+    // arcGroupLabelContainers
+    //   .filter((d, i) => i > data.length / 3 * 2)
+    //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
+    //   // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
+    //   .attr('text-anchor', 'end')
+
+    // arcGroupLabelContainers
+    //   .append('text')
+    //   .classed('column-label', true)
+    //   .attr('x', radius - innerMargin + labelOffset)
+    //   .attr('y', 0)
+    //   .attr('dominant-baseline', 'middle')
+    //   .text((d, i) => d[columns])
+
+
     arcGroups
       .attr('opacity', 0)
       .transition()
       .duration(0)
       .delay((d, i) => getAnimationDelay(i))
       .attr('opacity', 1);
-    
+
     const legendGroup = svg.append('g')
       .classed('legend-group', true)
       .attr('transform', `translate(0, ${innerMargin})`);
-    
+
     const legendRows = legendGroup.selectAll('.legend-row')
       .data(rowLabels)
       .enter()
       .append('g')
-      .attr('transform', (d, i) => `translate(0, ${arcWidth * i})`)
+      .attr('transform', (d, i) => `translate(50, ${arcWidth * i})`)
       .classed('legend-row', true)
-      
-    const svgRowLabels = legendRows.append('text')
-      .text(d => d)
-      .classed('row-label', true);
-    
-    const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
-    const remainingSpace = radius - longestLabel - 30;
-    
-    svgRowLabels
-      .attr('x', ~~longestLabel + 10)
-      .attr('y', arcWidth / 2)
-      .attr('text-anchor', 'end')
-      .attr('alignment-baseline', 'middle');
-    
-    const legendColorGroups = legendRows
-      .append('g')
-      .attr('transform', `translate(${~~longestLabel + 20}, 0)`)
-      .on('click', (d, i) => {
+      .classed('is-active', (d, i) => i === this.activeRow)
+      .on('click', (d, i, nodes, ol) => {
+        this.activeRow = i;
         this.options.sortBy = rows[i];
         this.event.emit('sort', this.options.sortBy);
-        this.render();
+        this.update(this.options);
       });
-    
-    const colorBlockWidth = remainingSpace / colorSteps;
 
+    const svgRowLabels = legendRows.append('text')
+      // .append('tspan')
+      .text(d => d)
+      .classed('row-label', true);
+
+    const longestLabel = d3Max(svgRowLabels.nodes(), label => label.getBoundingClientRect().width);
+    const remainingSpace = radius - longestLabel - 80;
+    const legendXSpace = ~~longestLabel + 20;
+
+    svgRowLabels
+      .attr('x', ~~longestLabel + 10)
+      // .attr('y', arcWidth / 2)
+      .attr('text-anchor', 'end')
+      .attr('alignment-baseline', 'middle')
+      .attr('dominant-baseline', 'middle');
+
+    const legendColorGroups = legendRows
+      .append('g')
+      .classed('legend-color-blocks', true)
+      .attr('transform', `translate(${legendXSpace}, 0)`);
+
+    const colorBlockWidth = remainingSpace / colorSteps;
     const blockHeight = Math.min(arcWidth, 30);
     const blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 
-    const legendColorBlocks = legendColorGroups
+    svgRowLabels
+      .attr('y', blockOffset + blockHeight / 2);
+
+    legendColorGroups
       .selectAll('.color-block')
       .data((d, i) => colorData[i].range().slice(0).reverse())
       .enter()
@@ -318,7 +362,35 @@ class RadialBarChart extends OECDChart {
       .attr('width', colorBlockWidth)
       .attr('height', blockHeight)
       .attr('fill', (d, i) => d)
-    
+
+      legendGroup
+      // .filter((d,i) => i === 0)
+      .append('text')
+      .classed('legend-label', true)
+      .attr('x', legendXSpace + 50)
+      .attr('y', blockOffset - 5)
+      .text(this.options.legendLabelTop)
+      .attr('dominant-baseline', 'baseline');
+
+    const lastGroup = legendColorGroups
+      .filter((d, i) => i === legendColorGroups.size() - 1)
+
+    lastGroup
+      .append('text')
+      .classed('legend-label', true)
+      .attr('y', blockOffset + blockHeight + 5)
+      .attr('dominant-baseline', 'hanging')
+      .text(this.options.legendLabelLeft);
+
+    lastGroup
+      .append('text')
+      .classed('legend-label', true)
+      .attr('text-anchor', 'end')
+      .attr('dominant-baseline', 'hanging')
+      .attr('y', blockOffset + blockHeight + 5)
+      .attr('x', colorBlockWidth * colorData.length)
+      .text(this.options.legendLabelRight);
+
     this.arcGroups = arcGroups;
   }
 

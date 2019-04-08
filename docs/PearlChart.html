@@ -69,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line66">line 66</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -132,11 +132,15 @@
   data: [
     {
       value: 410,
-      color: '#900c3f'
+      color: '#900c3f',
+      showLabel: true, // default is false
+      labelPlacement: 'bottom' // default 'top'
     },
     {
       value: 520,
-      color: '#189aa8'
+      color: '#189aa8',
+      showLabel: false, // default is false
+      labelPlacement: 'top'
     }
   ],
   labelFormat: val => `${Math.round(val)} $`
@@ -597,45 +601,6 @@ const pearlChart = new PearlChart({ chartOptions });</code></pre>
 
         <tr>
             
-                <td class="name"><code>showLabels</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    <code>false</code>
-                
-                </td>
-            
-
-            <td class="description last"><p>Hide or show circle labels</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>colorLabels</code></td>
             
 
@@ -777,7 +742,7 @@ const pearlChart = new PearlChart({ chartOptions });</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line148">line 148</a>
+        <a href="PearlChart.js.html">PearlChart.js</a>, <a href="PearlChart.js.html#line151">line 151</a>
     </li></ul></dd>
     
 

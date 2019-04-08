@@ -21,11 +21,15 @@ import OECDChart from './OECDChart';
  *   data: [
  *     {
  *       value: 410,
- *       color: '#900c3f'
+ *       color: '#900c3f',
+ *       showLabel: true, // default is false
+ *       labelPlacement: 'bottom' // default 'top'
  *     },
  *     {
  *       value: 520,
- *       color: '#189aa8'
+ *       color: '#189aa8',
+ *       showLabel: false, // default is false
+ *       labelPlacement: 'top'
  *     }
  *   ],
  *   labelFormat: val => `${Math.round(val)} $`
@@ -47,7 +51,6 @@ import OECDChart from './OECDChart';
  * @param {bool} [options.showTicks = true] - Hide or show ticks
  * @param {function} options.callback - A function that is called on circle click
  * @param {function} [options.labelFormat = val => Math.round(val * 10) / 10] - A function for formatting circle labels
- * @param {function} [options.showLabels = false] - Hide or show circle labels
  * @param {function} [options.colorLabels = false] - Fill labels in circle color or black
  * @param {array}  options.data - The data as array. i.e.:
  * ```
@@ -79,13 +82,11 @@ class PearlChart extends OECDChart {
       labelOffset: 5,
       ticks: 4,
       tickValues: null,
-      showLabels: false,
       colorLabels: false,
       callback: null,
       showTicks: true,
       labelAccessor: data => d.value,
-      labelFormat: val => val,
-      labelPlacement: 'top'
+      labelFormat: val => val
     };
 
     this.init(options);
@@ -100,7 +101,6 @@ class PearlChart extends OECDChart {
       marginLeft,
       marginRight,
       labelOffset,
-      labelPlacement,
     } = this.options;
 
     const d3Container = d3Select(container);
@@ -250,34 +250,22 @@ class PearlChart extends OECDChart {
       .attr('r', radius)
       .style('fill', d => d.color);
 
-    if (this.options.showLabels) {
-      circle.append('text')
-        .classed('pearlchart__circle-label', true)
-        .attr('font-size', this.options.fontSize)
-        .attr('x', d => this.scale(d.value))
-        .attr('y', (innerHeight / 2))
-        .attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset)
-        .text(d => {
-          const value = this.options.labelAccessor(d);
-          return this.options.labelFormat(value);
-        })
-        .attr('text-anchor', 'middle')
-        .style('fill', d => (!this.options.colorLabels ? '#000' : d.color));
-    } else {
-      circle.append('text')
-        .classed('pearlchart__circle-tooltip', true)
-        .attr('font-size', this.options.fontSize)
-        .attr('x', d => this.scale(d.value))
-        .attr('y', (innerHeight / 2))
-        .attr('dy', (labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset)
-        .text(d => {
-          const value = this.options.labelAccessor(d);
-          return this.options.labelFormat(value);
-        })
-        .attr('text-anchor', 'middle')
-        .style('fill', d => (!this.options.colorLabels ? '#000' : d.color))
-        .style('display', 'none');
-    }
+    const cirlcesWithLabels = circle
+      .append('text')
+      .classed('pearlchart__circle-label', d => d.showLabel)
+      .classed('pearlchart__circle-tooltip', d => !d.showLabel)
+      .attr('font-size', this.options.fontSize)
+      .attr('x', d => this.scale(d.value))
+      .attr('y', (innerHeight / 2))
+      .attr('dy', d => (d.labelPlacement === 'bottom' ? 1 : -1) * (radius * 2) + labelOffset)
+      .text(d => {
+        const value = this.options.labelAccessor(d);
+        return this.options.labelFormat(value);
+      })
+      .attr('text-anchor', 'middle')
+      .style('fill', d => (!this.options.colorLabels ? '#000' : d.color));
+
+    cirlcesWithLabels.filter(d => !d.showLabel).style('display', 'none');
   }
 
   static parseData(_data) {
