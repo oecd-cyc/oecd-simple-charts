@@ -374,7 +374,7 @@ class RadialBarChart extends OECDChart {
       .attr('text-anchor', 'end')
       .attr('dominant-baseline', 'hanging')
       .attr('y', blockOffset + blockHeight + 5)
-      .attr('x', colorBlockWidth * colorData.length)
+      .attr('x', colorBlockWidth * maxColorSteps)
       .text(this.options.legendLabelRight);
 
     this.arcGroups = arcGroups;

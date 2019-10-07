@@ -8907,7 +8907,7 @@ var RadialBarChart = function (_OECDChart) {
 
       lastGroup.append('text').classed('legend-label', true).attr('y', blockOffset + blockHeight + 5).attr('dominant-baseline', 'hanging').text(this.options.legendLabelLeft);
 
-      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('dominant-baseline', 'hanging').attr('y', blockOffset + blockHeight + 5).attr('x', colorBlockWidth * colorData.length).text(this.options.legendLabelRight);
+      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('dominant-baseline', 'hanging').attr('y', blockOffset + blockHeight + 5).attr('x', colorBlockWidth * maxColorSteps).text(this.options.legendLabelRight);
 
       this.arcGroups = arcGroups;
     }
