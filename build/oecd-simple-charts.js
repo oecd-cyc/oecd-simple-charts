@@ -8760,7 +8760,9 @@ var RadialBarChart = function (_OECDChart) {
         return quantize$1().domain(extent$$1).range(colors);
       });
 
-      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
+      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this)).on('click', function (d) {
+        _this2.event.emit('click.group', d);
+      });
 
       var arcPaths = arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
         return rows.map(function (row, rowIndex) {
@@ -8779,24 +8781,10 @@ var RadialBarChart = function (_OECDChart) {
       }).enter().append('path').attr('d', arcGenerator).attr('fill', function (d) {
         return d.color;
       }).attr('stroke', strokeColor).attr('stroke-width', strokeWidth).on('mouseenter', function (d) {
-        // this.parentNode.appendChild(this);
-        // d3Select(this)
-        //   .attr('stroke-width', hoverStrokeWidth)
-        //   .attr('stroke', hoverStrokeColor);
-
         that.event.emit('mouseenter', d.parentData);
       }).on('mouseleave', function (d) {
-        // d3Select(this)
-        //   .attr('stroke-width', 1)
-        //   .attr('stroke', strokeColor);
-
         that.event.emit('mouseleave', d.parentData);
       }).on('click', function (d) {
-        // this.parentNode.appendChild(this);
-        // d3Select(this)
-        //   .attr('stroke-width', hoverStrokeWidth)
-        //   .attr('stroke', hoverStrokeColor);
-
         that.event.emit('click', d.parentData);
       });
 
@@ -8815,32 +8803,6 @@ var RadialBarChart = function (_OECDChart) {
       }).attr('dominant-baseline', 'middle').filter(function (d, i) {
         return i * step$$1 + step$$1 / 2 - Math.PI / 2 > Math.PI / 2;
       }).attr('text-anchor', 'end');
-      //       .attr('x', radius - innerMargin + labelOffset)
-      //        .attr('transform-origin',  + ' 0')
-
-      // .each((d, i) => {
-      //   console.log(getEndAngle(d, i));
-      // });
-
-      // const arcGroupLabelContainers = arcGroups
-      //   .append('g')
-      //   .classed('label-container', true)
-      //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
-
-      // arcGroupLabelContainers
-      //   .filter((d, i) => i > data.length / 3 * 2)
-      //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
-      //   // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      //   .attr('text-anchor', 'end')
-
-      // arcGroupLabelContainers
-      //   .append('text')
-      //   .classed('column-label', true)
-      //   .attr('x', radius - innerMargin + labelOffset)
-      //   .attr('y', 0)
-      //   .attr('dominant-baseline', 'middle')
-      //   .text((d, i) => d[columns])
-
 
       arcGroups.attr('opacity', 0).transition().duration(0).delay(function (d, i) {
         return getAnimationDelay(i);
