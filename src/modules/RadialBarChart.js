@@ -10,11 +10,23 @@ function rad2deg(rad) {
   return rad / Math.PI * 180;
 }
 
+function isArray(obj) {
+  return obj && typeof obj === 'object' && typeof obj.length === 'number';
+}
+
 function getColorRange(base, amount, lightness) {
+  if (isArray(base)) {
+    return base;
+  }
+
   return d3Range(0, amount, 1).map(step => {
     return color(base)
       .mix(color('#fff'), (lightness / 100) * step / amount);
-  });
+  }).slice(0).reverse();
+}
+
+function getMaxColorSteps(colors, colorSteps) {
+  return d3Max(colors, c => isArray(c) ? c.length : colorSteps);
 }
 
 function getExtent(data, rows) {
@@ -151,10 +163,12 @@ class RadialBarChart extends OECDChart {
 
     // const extent = getExtent(data, rows);
 
+    const maxColorSteps = getMaxColorSteps(rowColors, colorSteps);
+
     const colorData = rows.map((row, i) => {
-      const colors = getColorRange(rowColors[i], colorSteps, lightnessFactor);
+      const colors = getColorRange(rowColors[i], maxColorSteps, lightnessFactor);
       const extent = d3Extent(data, d => +d[row]);
-      return d3ScaleQuantize().domain(extent).range(colors.slice(0).reverse());
+      return d3ScaleQuantize().domain(extent).range(colors);
     });
 
     const arcGroups = centeredGroup
@@ -316,7 +330,7 @@ class RadialBarChart extends OECDChart {
       .classed('legend-color-blocks', true)
       .attr('transform', `translate(${legendXSpace}, 0)`);
 
-    const colorBlockWidth = remainingSpace / colorSteps;
+    const colorBlockWidth = remainingSpace / maxColorSteps;
     const blockHeight = Math.min(arcWidth, 30);
     const blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 

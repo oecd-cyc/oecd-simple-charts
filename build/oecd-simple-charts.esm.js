@@ -5153,6 +5153,12 @@ function mitt(all                 ) {
 	};
 }
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -8578,9 +8584,23 @@ function rad2deg$1(rad) {
   return rad / Math.PI * 180;
 }
 
+function isArray(obj) {
+  return obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && typeof obj.length === 'number';
+}
+
 function getColorRange(base, amount, lightness) {
+  if (isArray(base)) {
+    return base;
+  }
+
   return d3Range(0, amount, 1).map(function (step$$1) {
     return color$1(base).mix(color$1('#fff'), lightness / 100 * step$$1 / amount);
+  }).slice(0).reverse();
+}
+
+function getMaxColorSteps(colors, colorSteps) {
+  return d3Max(colors, function (c) {
+    return isArray(c) ? c.length : colorSteps;
   });
 }
 
@@ -8724,12 +8744,14 @@ var RadialBarChart = function (_OECDChart) {
 
       // const extent = getExtent(data, rows);
 
+      var maxColorSteps = getMaxColorSteps(rowColors, colorSteps);
+
       var colorData = rows.map(function (row, i) {
-        var colors = getColorRange(rowColors[i], colorSteps, lightnessFactor);
+        var colors = getColorRange(rowColors[i], maxColorSteps, lightnessFactor);
         var extent$$1 = d3Extent(data, function (d) {
           return +d[row];
         });
-        return quantize$1().domain(extent$$1).range(colors.slice(0).reverse());
+        return quantize$1().domain(extent$$1).range(colors);
       });
 
       var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
@@ -8855,7 +8877,7 @@ var RadialBarChart = function (_OECDChart) {
 
       var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + legendXSpace + ', 0)');
 
-      var colorBlockWidth = remainingSpace / colorSteps;
+      var colorBlockWidth = remainingSpace / maxColorSteps;
       var blockHeight = Math.min(arcWidth, 30);
       var blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 
