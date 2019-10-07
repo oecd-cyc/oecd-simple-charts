@@ -193,13 +193,13 @@
       data: RadialChartData,
     });
 
-    RadialBarChartExample.on('mouseenter', d => console.log(d));
-    RadialBarChartExample.on('mouseleave', d => console.log(d));
-    RadialBarChartExample.on('sort', d => console.log(d));
+    RadialBarChartExample.on('mouseenter', function(d) { console.log(d) });
+    RadialBarChartExample.on('mouseleave', function(d) { console.log(d) });
+    RadialBarChartExample.on('sort', function(d) { console.log(d) });
 
-    document.getElementById('RadialChartUpdate').addEventListener('click', () => {
+    document.getElementById('RadialChartUpdate').addEventListener('click', function() {
       RadialBarChartExample.update({
-        data: RadialChartData.filter((d, i) => i % 2 === 0)
+        data: RadialChartData.filter(function(d, i) { return i % 2 === 0 })
       });
     });
     </script>
