@@ -5153,6 +5153,12 @@ function mitt(all                 ) {
 	};
 }
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -8578,9 +8584,23 @@ function rad2deg$1(rad) {
   return rad / Math.PI * 180;
 }
 
+function isArray(obj) {
+  return obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && typeof obj.length === 'number';
+}
+
 function getColorRange(base, amount, lightness) {
+  if (isArray(base)) {
+    return base;
+  }
+
   return d3Range(0, amount, 1).map(function (step$$1) {
     return color$1(base).mix(color$1('#fff'), lightness / 100 * step$$1 / amount);
+  }).slice(0).reverse();
+}
+
+function getMaxColorSteps(colors, colorSteps) {
+  return d3Max(colors, function (c) {
+    return isArray(c) ? c.length : colorSteps;
   });
 }
 
@@ -8724,15 +8744,19 @@ var RadialBarChart = function (_OECDChart) {
 
       // const extent = getExtent(data, rows);
 
+      var maxColorSteps = getMaxColorSteps(rowColors, colorSteps);
+
       var colorData = rows.map(function (row, i) {
-        var colors = getColorRange(rowColors[i], colorSteps, lightnessFactor);
+        var colors = getColorRange(rowColors[i], maxColorSteps, lightnessFactor);
         var extent$$1 = d3Extent(data, function (d) {
           return +d[row];
         });
-        return quantize$1().domain(extent$$1).range(colors.slice(0).reverse());
+        return quantize$1().domain(extent$$1).range(colors);
       });
 
-      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this));
+      var arcGroups = centeredGroup.selectAll('.arc-group').data(sortedData).enter().append('g').classed('arc-group', true).on('mouseenter', this.handleGroupMouseEnter(this)).on('mouseleave', this.handleGroupMouseLeave.bind(this)).on('click', function (d) {
+        _this2.event.emit('click.group', d);
+      });
 
       var arcPaths = arcGroups.append('g').classed('arc-container', true).selectAll('.arc').data(function (d, i) {
         return rows.map(function (row, rowIndex) {
@@ -8751,24 +8775,10 @@ var RadialBarChart = function (_OECDChart) {
       }).enter().append('path').attr('d', arcGenerator).attr('fill', function (d) {
         return d.color;
       }).attr('stroke', strokeColor).attr('stroke-width', strokeWidth).on('mouseenter', function (d) {
-        // this.parentNode.appendChild(this);
-        // d3Select(this)
-        //   .attr('stroke-width', hoverStrokeWidth)
-        //   .attr('stroke', hoverStrokeColor);
-
         that.event.emit('mouseenter', d.parentData);
       }).on('mouseleave', function (d) {
-        // d3Select(this)
-        //   .attr('stroke-width', 1)
-        //   .attr('stroke', strokeColor);
-
         that.event.emit('mouseleave', d.parentData);
       }).on('click', function (d) {
-        // this.parentNode.appendChild(this);
-        // d3Select(this)
-        //   .attr('stroke-width', hoverStrokeWidth)
-        //   .attr('stroke', hoverStrokeColor);
-
         that.event.emit('click', d.parentData);
       });
 
@@ -8787,32 +8797,6 @@ var RadialBarChart = function (_OECDChart) {
       }).attr('dominant-baseline', 'middle').filter(function (d, i) {
         return i * step$$1 + step$$1 / 2 - Math.PI / 2 > Math.PI / 2;
       }).attr('text-anchor', 'end');
-      //       .attr('x', radius - innerMargin + labelOffset)
-      //        .attr('transform-origin',  + ' 0')
-
-      // .each((d, i) => {
-      //   console.log(getEndAngle(d, i));
-      // });
-
-      // const arcGroupLabelContainers = arcGroups
-      //   .append('g')
-      //   .classed('label-container', true)
-      //   .attr('transform', (d, i) => `rotate(${rad2deg(i * step + (step / 2)) - 90})`)
-
-      // arcGroupLabelContainers
-      //   .filter((d, i) => i > data.length / 3 * 2)
-      //   .attr('transform', (d, i) => `scale(-1,1) rotate(${rad2deg(i * step + (step / 2))})`)
-      //   // .attr('transform-origin', radius - innerMargin + labelOffset + ' 0')
-      //   .attr('text-anchor', 'end')
-
-      // arcGroupLabelContainers
-      //   .append('text')
-      //   .classed('column-label', true)
-      //   .attr('x', radius - innerMargin + labelOffset)
-      //   .attr('y', 0)
-      //   .attr('dominant-baseline', 'middle')
-      //   .text((d, i) => d[columns])
-
 
       arcGroups.attr('opacity', 0).transition().duration(0).delay(function (d, i) {
         return getAnimationDelay(i);
@@ -8855,7 +8839,7 @@ var RadialBarChart = function (_OECDChart) {
 
       var legendColorGroups = legendRows.append('g').classed('legend-color-blocks', true).attr('transform', 'translate(' + legendXSpace + ', 0)');
 
-      var colorBlockWidth = remainingSpace / colorSteps;
+      var colorBlockWidth = remainingSpace / maxColorSteps;
       var blockHeight = Math.min(arcWidth, 30);
       var blockOffset = Math.max(0, (arcWidth - blockHeight) / 2);
 
@@ -8879,7 +8863,7 @@ var RadialBarChart = function (_OECDChart) {
 
       lastGroup.append('text').classed('legend-label', true).attr('y', blockOffset + blockHeight + 5).attr('dominant-baseline', 'hanging').text(this.options.legendLabelLeft);
 
-      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('dominant-baseline', 'hanging').attr('y', blockOffset + blockHeight + 5).attr('x', colorBlockWidth * colorData.length).text(this.options.legendLabelRight);
+      lastGroup.append('text').classed('legend-label', true).attr('text-anchor', 'end').attr('dominant-baseline', 'hanging').attr('y', blockOffset + blockHeight + 5).attr('x', colorBlockWidth * maxColorSteps).text(this.options.legendLabelRight);
 
       this.arcGroups = arcGroups;
     }
