@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>OECD Charting Library Playground</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="oecd-simple-charts.css">
-    <script src="oecd-simple-charts.js"></script>
+    <link rel="stylesheet" href="http://dataviz1.local/build/style.css">
+    <link rel="stylesheet" href="http://dataviz1.local/build/oecd-simple-charts.css">
+    <script src="http://dataviz1.local/build/oecd-simple-charts.js"></script>
   </head>
   <body>
     <div id="chart-container" style="max-width:800px; margin: 0 auto;">
@@ -32,12 +32,10 @@
 
     var PearlChartExample = new OECDCharts.PearlChart({
       container: '#PearlChartExample',
-      extent: [300, 600],
+      extent: [0, 1000],
       title: 'Pearl Chart',
       renderInfoButton: true,
       showTicks: true,
-      showLabels: false,
-      labelPlacement: 'bottom',
       colorLabels: true,
       callback: callbackFunc,
       data: [
@@ -45,7 +43,7 @@
           value: 410,
           color: '#900c3f',
           exampleLabel: 'Beispiel-Label',
-          showLabel: true
+          showLabel: false
         },
         {
           value: 520,
@@ -59,7 +57,7 @@
           color: '#189aa8',
           exampleLabel: 'Test',
           showLabel: false,
-          labelPlacement: 'top'
+          labelPlacement: 'bottom'
         }
       ],
       // labelFormat: function(val) {
